@@ -29,7 +29,7 @@ html {
 }
 
 body {
-  font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Inter', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   color: var(--text-primary);
   line-height: 1.6;
   font-size: 16px;
@@ -95,12 +95,14 @@ body {
 
 .hero.is-light {
   background: var(--background-secondary);
-  border-top: 1px solid var(--border-color);
-  border-bottom: 1px solid var(--border-color);
+  /* border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color); */
 }
 
 .hero-body {
   padding: 4rem 1.5rem;
+    border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .teaser .hero-body {
@@ -326,6 +328,7 @@ body {
   margin-bottom: 2rem !important;
   position: relative;
   padding-bottom: 1rem;
+  text-align: center;
 }
 
 .title.is-3::after {
@@ -762,7 +765,7 @@ a:focus {
 
 @font-face {
   font-family: 'Computerfont'; /* A name you choose to use in your CSS */
-  src: url('fonts/myfont.ttf') format('truetype'); /* Path to your font file */
+  src: url('fonts/Computerfont.ttf') format('truetype'); /* Path to your font file */
   font-weight: normal;
   font-style: normal;
   font-display: swap; /* Recommended for performance */

@@ -58,12 +58,6 @@ Jack Smith, Cameron Trumpy, Benjamin Wolin">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
-  <!-- Preconnect for performance -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preconnect" href="https://ajax.googleapis.com">
-  <link rel="preconnect" href="https://documentcloud.adobe.com">
-  <link rel="preconnect" href="https://cdn.jsdelivr.net">
 
 
   <!-- TODO: Replace with your paper title and authors -->
@@ -81,8 +75,6 @@ Jack Smith, Cameron Trumpy, Benjamin Wolin">
   <link rel="preload" href="static/css/bulma-carousel.min.css" as="style"
     onload="this.onload=null;this.rel='stylesheet'">
   <link rel="preload" href="static/css/bulma-slider.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <link rel="preload" href="static/css/fontawesome.all.min.css" as="style"
-    onload="this.onload=null;this.rel='stylesheet'">
   <link rel="preload" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css" as="style"
     onload="this.onload=null;this.rel='stylesheet'">
 
@@ -90,19 +82,18 @@ Jack Smith, Cameron Trumpy, Benjamin Wolin">
   <noscript>
     <link rel="stylesheet" href="static/css/bulma-carousel.min.css">
     <link rel="stylesheet" href="static/css/bulma-slider.min.css">
-    <link rel="stylesheet" href="static/css/fontawesome.all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
   </noscript>
 
   <!-- Fonts - Optimized loading -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"> -->
 
   <!-- Defer non-critical JavaScript -->
   <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script defer src="https://documentcloud.adobe.com/view-sdk/main.js"></script>
-  <script defer src="static/js/fontawesome.all.min.js"></script>
+  <!-- <script defer src="https://documentcloud.adobe.com/view-sdk/main.js"></script> -->
   <script defer src="static/js/bulma-carousel.min.js"></script>
   <script defer src="static/js/bulma-slider.min.js"></script>
+    <script defer src="static/js/fontawesome.all.min.js"></script>
   <script defer src="static/js/index.js"></script>
 
   <!-- Structured Data for Academic Papers -->
@@ -355,46 +346,6 @@ Jack Smith, Cameron Trumpy, Benjamin Wolin">
       <!-- End paper abstract -->
 
 
-      <!-- Image carousel -->
-      <section class="hero is-small">
-        <div class="hero-body">
-          <div class="container">
-            <div id="results-carousel" class="carousel results-carousel">
-              <div class="item">
-                <!-- TODO: Replace with your research result images -->
-                <img src="static/images/carousel1.jpg" alt="First research result visualization" loading="lazy" />
-                <!-- TODO: Replace with description of this result -->
-                <h2 class="subtitle has-text-centered">
-                  First image description.
-                </h2>
-              </div>
-              <div class="item">
-                <!-- Your image here -->
-                <img src="static/images/carousel2.jpg" alt="Second research result visualization" loading="lazy" />
-                <h2 class="subtitle has-text-centered">
-                  Second image description.
-                </h2>
-              </div>
-              <div class="item">
-                <!-- Your image here -->
-                <img src="static/images/carousel3.jpg" alt="Third research result visualization" loading="lazy" />
-                <h2 class="subtitle has-text-centered">
-                  Third image description.
-                </h2>
-              </div>
-              <div class="item">
-                <!-- Your image here -->
-                <img src="static/images/carousel4.jpg" alt="Fourth research result visualization" loading="lazy" />
-                <h2 class="subtitle has-text-centered">
-                  Fourth image description.
-                </h2>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-      <!-- End image carousel -->
-
         <!-- Features -->
       <section class="hero is-small is-light">
         <div class="hero-body">
@@ -412,13 +363,19 @@ Jack Smith, Cameron Trumpy, Benjamin Wolin">
       <!-- End features -->
 
         <!-- Measurement Module -->
-      <section class="hero is-small is-light">
+      <section class="hero is-small">
         <div class="hero-body">
           <div class="container">
             <h2 class="title is-3">Measurement Module</h2>
-            <div class="columns is-centered has-text-centered">
-              <div class="column is-four-fifths">
 
+            <div class="columns is-centered has-text-centered">
+             <div class="column is-four-fifths">
+                 <p>module</p>
+              </div>
+              <div class="column is-four-fifths">
+                  <video poster="" id="tree" autoplay muted loop height="100%" preload="metadata">
+                    <source src="static/videos/scopeani.mp4" type="video/mp4">
+                  </video>
               </div>
             </div>
           </div>
@@ -428,13 +385,18 @@ Jack Smith, Cameron Trumpy, Benjamin Wolin">
 
 
         <!-- Output Module -->
-      <section class="hero is-small is-light">
+      <section class="hero is-small">
         <div class="hero-body">
           <div class="container">
             <h2 class="title is-3">Output Module</h2>
-            <div class="columns is-centered has-text-centered">
+          <div class="columns is-centered has-text-centered">
+             <div class="column is-four-fifths">
+                 <p>module</p>
+              </div>
               <div class="column is-four-fifths">
-
+                  <video poster="" id="tree" autoplay muted loop height="100%" preload="metadata">
+                    <source src="static/videos/psuvid.mp4" type="video/mp4">
+                  </video>
               </div>
             </div>
           </div>
@@ -443,15 +405,20 @@ Jack Smith, Cameron Trumpy, Benjamin Wolin">
       <!-- End Output Module -->
 
       <!-- Mainboard -->
-      <section class="hero is-small is-light">
+      <section class="hero is-small">
         <div class="hero-body">
           <div class="container">
             <h2 class="title is-3">Mainboard</h2>
-            <div class="columns is-centered has-text-centered">
-              <div class="column is-four-fifths">
-
+          <div class="columns is-centered has-text-centered">
+             <div class="column is-four-fifths">
+                 <p>module</p>
               </div>
-            </div>
+              <div class="column is-four-fifths">
+                  <video poster="" id="tree" autoplay muted loop height="100%" preload="metadata">
+                    <!-- TODO: Add your video file path here -->
+                    <source src="static/videos/mbvid.mp4" type="video/mp4">
+                  </video>
+              </div>
           </div>
         </div>
       </section>
@@ -478,6 +445,40 @@ Jack Smith, Cameron Trumpy, Benjamin Wolin">
       </section>
       <!-- End youtube video -->
 
+            <!-- Image carousel -->
+      <!-- <section class="hero is-small">
+        <div class="hero-body">
+          <div class="container">
+            <div id="results-carousel" class="carousel results-carousel">
+              <div class="item">
+                <img src="static/images/carousel1.jpg" alt="First research result visualization" loading="lazy" />
+                <h2 class="subtitle has-text-centered">
+                  First image description.
+                </h2>
+              </div>
+              <div class="item">
+                <img src="static/images/carousel2.jpg" alt="Second research result visualization" loading="lazy" />
+                <h2 class="subtitle has-text-centered">
+                  Second image description.
+                </h2>
+              </div>
+              <div class="item">
+                <img src="static/images/carousel3.jpg" alt="Third research result visualization" loading="lazy" />
+                <h2 class="subtitle has-text-centered">
+                  Third image description.
+                </h2>
+              </div>
+              <div class="item">
+                <img src="static/images/carousel4.jpg" alt="Fourth research result visualization" loading="lazy" />
+                <h2 class="subtitle has-text-centered">
+                  Fourth image description.
+                </h2>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section> -->
+      <!-- End image carousel -->
 
       <!-- Video carousel -->
       <section class="hero is-small">
@@ -487,21 +488,21 @@ Jack Smith, Cameron Trumpy, Benjamin Wolin">
             <div id="results-carousel" class="carousel results-carousel">
               <div class="item item-video1">
                 <!-- TODO: Add poster image for better preview -->
-                <video poster="" id="video1" controls muted loop height="100%" preload="metadata">
+                <video poster="" id="video1" controls muted loop height="50%" preload="metadata">
                   <!-- Your video file here -->
                   <source src="static/videos/carousel1.mp4" type="video/mp4">
                 </video>
               </div>
               <div class="item item-video2">
                 <!-- TODO: Add poster image for better preview -->
-                <video poster="" id="video2" controls muted loop height="100%" preload="metadata">
+                <video poster="" id="video2" controls muted loop height="50%" preload="metadata">
                   <!-- Your video file here -->
                   <source src="static/videos/carousel2.mp4" type="video/mp4">
                 </video>
               </div>
               <div class="item item-video3">
                 <!-- TODO: Add poster image for better preview -->
-                <video poster="" id="video3" controls muted loop height="100%" preload="metadata">
+                <video poster="" id="video3" controls muted loop height="50%" preload="metadata">
                   <!-- Your video file here -->
                   <source src="static/videos/carousel3.mp4" type="video/mp4">
                 </video>
@@ -520,10 +521,15 @@ Jack Smith, Cameron Trumpy, Benjamin Wolin">
       <!-- Paper poster -->
       <section class="hero is-small is-light">
         <div class="hero-body">
-          <div class="container">
+          <div class="container is-centered has-text-centered">
             <h2 class="title">Design Expo Poster</h2>
+              <div class="content">
+                <p>
+                  Missed us at the design expo? Check out our poster!
+                </p>
+              </div>
             <!-- TODO: Replace with poster PDF -->
-            <iframe src="static/pdfs/sample.pdf" width="100%" height="600">
+            <iframe src="static\pdfs\poster_draft.svg" width="100%" height="1200rem">
             </iframe>
 
           </div>
@@ -554,7 +560,7 @@ Jack Smith, Cameron Trumpy, Benjamin Wolin">
       </section>
       End BibTex citation -->
     <section class="section" id="Acknowledgements">
-    <div class="container is-max-desktop content">
+    <div class="container is-max-desktop has-text-centered content">
       <h2 class="title">Acknowledgements</h2>We would like to thank Professor Mark Brehob, and the EECS 473 Lab staff (Matt Smith, James Carl, Anna Huang, Frederick Yang, and
       Alec Zettel), for their support this semester. We would also like to thank Infineon for their financial support of EECS 473.
       </div>
@@ -581,11 +587,11 @@ Jack Smith, Cameron Trumpy, Benjamin Wolin">
         </div>
       </footer>
 
-      <!-- Statcounter tracking code -->
-
-      <!-- You can add a tracker to track page visits by creating an account at statcounter.com -->
-
-      <!-- End of Statcounter Code -->
+    <!-- GLTF Resources -->
+    <script src="https://unpkg.com/three@0.146.0/build/three.min.js"></script>
+   <script src="https://unpkg.com/three@0.146.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://unpkg.com/three@0.146.0/examples/js/controls/OrbitControls.js"></script>
+    <script type="module" src="static/js/gltfscript.js"></script>
 
 </body>
 

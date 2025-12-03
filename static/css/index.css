@@ -745,16 +745,45 @@ a:focus {
 }
 
 
+/* Poster iframe responsive styling */
+.hero iframe {
+  width: 100%;
+  height: auto;
+  min-height: 600px;
+  border: none;
+}
+
+/* Mobile adjustments for poster iframe */
+@media screen and (max-width: 768px) {
+  .hero iframe {
+    min-height: 400px;
+  }
+
+  .hero.is-light .hero-body {
+    padding: 2rem 1rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .hero iframe {
+    min-height: 300px;
+  }
+
+  .hero.is-light .hero-body {
+    padding: 1.5rem 0.75rem;
+  }
+}
+
 /* Print styles */
 @media print {
   .more-works-container {
     display: none;
   }
-  
+
   .hero, .section {
     animation: none;
   }
-  
+
   .button {
     background: transparent !important;
     color: var(--text-primary) !important;

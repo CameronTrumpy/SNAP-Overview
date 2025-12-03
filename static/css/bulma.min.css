@@ -7663,7 +7663,7 @@ label.panel-block:hover {
     flex-basis: 0;
     flex-grow: 1;
     flex-shrink: 1;
-    padding: .75rem
+    padding: .75rem;
 }
 
 .columns.is-mobile>.column.is-narrow {
@@ -9178,7 +9178,8 @@ print {
 .columns {
     margin-left: -.75rem;
     margin-right: -.75rem;
-    margin-top: -.75rem
+    margin-top: -.75rem;
+    align-items: center;
 }
 
 .columns:last-child {

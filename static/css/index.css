@@ -745,18 +745,35 @@ a:focus {
 }
 
 
-/* Poster iframe responsive styling */
-.hero iframe {
+/* Poster container responsive styling */
+.poster-container {
   width: 100%;
-  height: auto;
-  min-height: 600px;
-  border: none;
+  max-width: 1200px;
+  margin: 0 auto;
+  background: white;
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  position: relative;
 }
 
-/* Mobile adjustments for poster iframe */
+.poster-svg,
+.poster-fallback {
+  width: 100%;
+  height: auto;
+  display: block;
+  min-height: 1000px;
+}
+
+.poster-svg {
+  object-fit: contain;
+}
+
+/* Mobile adjustments for poster */
 @media screen and (max-width: 768px) {
-  .hero iframe {
-    min-height: 400px;
+  .poster-svg,
+  .poster-fallback {
+    min-height: 600px;
   }
 
   .hero.is-light .hero-body {
@@ -765,8 +782,9 @@ a:focus {
 }
 
 @media screen and (max-width: 480px) {
-  .hero iframe {
-    min-height: 300px;
+  .poster-svg,
+  .poster-fallback {
+    min-height: 400px;
   }
 
   .hero.is-light .hero-body {

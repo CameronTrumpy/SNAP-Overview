@@ -7,7 +7,7 @@ SNAP-Overview is our central repository storing all of the relevant information 
     - Mainboard Module Code
     - Oscilloscope / Logic Analyzer Module Code
     - Power Supply / Waveform Generator Module Code
-- [Website](./Website)
+- [docs](./docs)
     - Code for [snapstation.tech](https://snapstation.tech), our project overview website
     - [In-browser demo of our user interface](https://snapstation.tech/demo.html)
 - [Hardware](./Hardware)

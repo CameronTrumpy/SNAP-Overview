@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Primary Meta Tags -->
+  <!-- Replace with your paper title and author names -->
+  <meta name="title" content="SNAP: Modular Electronics Workstation - Claire Garbowski, Ethan McKean, Andre Quimper Osores
+Jack Smith, Cameron Trumpy, Benjamin Wolin">
+  <!-- Write a compelling 150-160 character description of your research -->
+  <meta name="description"
+    content="SNAP is a modular electronics lab kit that provides four fundamental tools at a fraction of the cost of traditional equipment.">
+  <!-- TODO: Add 5-10 relevant keywords for your research area -->
+  <!-- TODO: List all authors -->
+  <meta name="author" content="CAMERON_TRUMPY">
+  <meta name="robots" content="index, follow">
+  <meta name="language" content="English">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="article">
+  <!-- Replace with your institution or lab name -->
+  <meta property="og:site_name" content="University Of Michigan">
+  <!--Same as paper title above -->
+  <meta property="og:title" content="SNAP: Modular Electronics Workstation - Claire Garbowski, Ethan McKean, Andre Quimper Osores
+Jack Smith, Cameron Trumpy, Benjamin Wolin">
+  <!-- Same as description above -->
+  <meta property="og:description"
+    content="SNAP is a modular electronics lab kit that provides four fundamental tools at a fraction of the cost of traditional equipment.">
+  <!-- TODO: Replace with your actual website URL -->
+  <meta property="og:url" content="https://YOUR_DOMAIN.com/YOUR_PROJECT_PAGE">
+  <!-- TODO: Create a 1200x630px preview image and update path -->
+  <meta property="og:image" content="https://YOUR_DOMAIN.com/static/images/social_preview.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="PAPER_TITLE - Research Preview">
+  <meta property="article:published_time" content="2024-01-01T00:00:00.000Z">
+  <meta property="article:author" content="FIRST_AUTHOR_NAME">
+  <meta property="article:section" content="Research">
+  <meta property="article:tag" content="KEYWORD1">
+  <meta property="article:tag" content="KEYWORD2">
+
+  <!-- Additional SEO -->
+  <meta name="theme-color" content="#2563eb">
+  <meta name="msapplication-TileColor" content="#2563eb">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+  <!-- TODO: Replace with your paper title and authors -->
+  <title>SNAP: Modular Electronics Workstation | EECS 473</title>
+
+  <!-- Favicon and App Icons -->
+  <link rel="icon" type="image/x-icon" href="static/images/favicon.ico">
+  <link rel="apple-touch-icon" href="static/images/favicon.ico">
+
+  <!-- Critical CSS - Load synchronously -->
+  <link rel="stylesheet" href="static/css/bulma.min.css">
+  <link rel="stylesheet" href="static/css/index.css">
+
+  <!-- Non-critical CSS - Load asynchronously -->
+  <link rel="preload" href="static/css/bulma-carousel.min.css" as="style"
+    onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="static/css/bulma-slider.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css" as="style"
+    onload="this.onload=null;this.rel='stylesheet'">
+
+  <!-- Fallback for browsers that don't support preload -->
+  <noscript>
+    <link rel="stylesheet" href="static/css/bulma-carousel.min.css">
+    <link rel="stylesheet" href="static/css/bulma-slider.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  </noscript>
+
+  <!-- Fonts - Optimized loading -->
+  <!-- <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"> -->
+
+  <!-- Defer non-critical JavaScript -->
+  <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <!-- <script defer src="https://documentcloud.adobe.com/view-sdk/main.js"></script> -->
+  <script defer src="static/js/bulma-carousel.min.js"></script>
+  <script defer src="static/js/bulma-slider.min.js"></script>
+  <script defer src="static/js/fontawesome.all.min.js"></script>
+  <script defer src="static/js/index.js"></script>
+
+</head>
+
+<body>
+
+
+  <!-- Scroll to Top Button -->
+  <button class="scroll-to-top" onclick="scrollToTop()" title="Scroll to top" aria-label="Scroll to top">
+    <i class="fas fa-chevron-up"></i>
+  </button>
+
+  <!-- More Works Dropdown -->
+
+  <!-- <div class="more-works-container">
+    <button class="more-works-btn" onclick="toggleMoreWorks()" title="View More Works from Our Lab">
+      <i class="fas fa-flask"></i>
+      More Works
+      <i class="fas fa-chevron-down dropdown-arrow"></i>
+    </button>
+    <div class="more-works-dropdown" id="moreWorksDropdown">
+      <div class="dropdown-header">
+        <h4>More Works from Our Lab</h4>
+        <button class="close-btn" onclick="toggleMoreWorks()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="works-list">
+        <!-~ TODO: Replace with your lab's related works ~->
+        <a href="https://arxiv.org/abs/PAPER_ID_1" class="work-item" target="_blank">
+          <div class="work-info">
+            <!-~ TODO: Replace with actual paper title ~->
+            <h5>Paper Title 1</h5>
+            <!-~ TODO: Replace with brief description ~->
+            <p>Brief description of the work and its main contribution.</p>
+            <!-~ TODO: Replace with venue and year ~->
+            <span class="work-venue">Conference/Journal 2024</span>
+          </div>
+          <i class="fas fa-external-link-alt"></i>
+        </a>
+        <!-~ TODO: Add more related works or remove extra items ~->
+        <a href="https://arxiv.org/abs/PAPER_ID_2" class="work-item" target="_blank">
+          <div class="work-info">
+            <h5>Paper Title 2</h5>
+            <p>Brief description of the work and its main contribution.</p>
+            <span class="work-venue">Conference/Journal 2023</span>
+          </div>
+          <i class="fas fa-external-link-alt"></i>
+        </a>
+        <a href="https://arxiv.org/abs/PAPER_ID_3" class="work-item" target="_blank">
+          <div class="work-info">
+            <h5>Paper Title 3</h5>
+            <p>Brief description of the work and its main contribution.</p>
+            <span class="work-venue">Conference/Journal 2023</span>
+          </div>
+          <i class="fas fa-external-link-alt"></i>
+        </a>
+      </div>
+    </div>
+  </div> -->
+
+
+  <main id="main-content">
+    <section class="hero">
+      <div class="hero-body">
+        <div class="container is-max-desktop">
+          <div class="columns is-centered">
+            <div class="column has-text-centered">
+              <!-- TODO: Replace with your paper title -->
+              <h1 class="title publication-title-themed">SNAP</h1>
+              <h2 class="title is-2 publication-title">Modular Electronics Workstation</h2>
+              <div class="is-size-5 publication-authors">
+                <!-- TODO: Replace with your paper authors and their personal links -->
+                <span class="author-block">
+                  <a href="https://www.linkedin.com/in/claire-garbowski/" target="_blank">Claire Garbowski</a>,</span>
+                <span class="author-block">
+                  <a href="https://www.linkedin.com/in/ethanmckean/" target="_blank">Ethan McKean</a>,</span>
+                <span class="author-block">
+                  <a href="https://www.linkedin.com/in/andre-q-395964254/" target="_blank">Andre Quimper
+                    Osores</a>,</span>
+                </span>
+                <span class="author-block">
+                  <a href="http://www.linkedin.com/in/jack-smith-561326330" target="_blank">Jack Smith</a>,</span>
+                </span>
+                <span class="author-block">
+                  <a href="https://www.linkedin.com/in/cameron-trumpy/" target="_blank">Cameron Trumpy</a>,</span>
+                </span>
+                <span class="author-block">
+                  <a href="https://www.linkedin.com/in/benjamin-wolin-8812aa1ab/" target="_blank">Benjamin Wolin</a>
+                </span>
+              </div>
+
+              <div class="is-size-5 publication-authors">
+                <!-- TODO: Replace with your institution and conference/journal info -->
+                <span class="author-block">University of Michigan - EECS 473</span>
+              </div>
+
+              <div class="publication-links">
+                <!-- TODO: Update with your arXiv paper ID -->
+                <!-- <span class="link-block">
+                  <a href="https://arxiv.org/pdf/<ARXIV PAPER ID>.pdf" target="_blank"
+                    class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                    </span>
+                    <span>Paper</span>
+                  </a>
+                </span> -->
+
+                <!-- TODO: Add your supplementary material PDF or remove this section -->
+                <!-- <span class="link-block">
+                  <a href="Docs/docs.html" target="_blank" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                    </span>
+                    <span>User Documentation</span>
+                  </a>
+                </span> -->
+
+                <span class="link-block">
+                  <a href="https://github.com/AndreQuimper/473-SNAP-EE-Workstation" target="_blank"
+                    class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fab fa-github"></i>
+                    </span>
+                    <span>Code</span>
+                  </a>
+                </span>
+
+                <span class="link-block">
+                  <a href="https://university-of-michigan-22.365.altium.com/designs/folder-80AE9EF7-E028-4C08-9FDD-7D33D4CCE47F"
+                    target="_blank" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fab fa-github"></i>
+                    </span>
+                    <span>Hardware</span>
+                  </a>
+                </span>
+
+                <span class="link-block">
+                  <a href="demo.html" target="_blank" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fas fa-desktop"></i>
+                    </span>
+                    <span>Demo Frontend</span>
+                  </a>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+      </div>
+
+      <!-- TODO: Replace with your teaser video -->
+      <video poster="" id="tree" autoplay muted loop playsinline width="50%" preload="metadata"
+        style="align-self: center;">
+        <!-- TODO: Add your video file path here -->
+        <source src="static/videos/main_square.mp4" type="video/mp4">
+      </video>
+      <!-- TODO: Replace with your video description -->
+      <!-- <div class="columns is-centered has-text-centered">
+            <div class="column is-four-fifths is-centered">
+              <h2 class="subtitle has-text-centered">
+                Aliquam vitae elit ullamcorper tellus egestas pellentesque. Ut lacus tellus, maximus vel lectus at, placerat
+                pretium mi. Maecenas dignissim tincidunt vestibulum. Sed consequat hendrerit nisl ut maximus.
+              </h2>
+            </div> -->
+      </div>
+    </section>
+
+    <!-- End teaser video -->
+    </section>
+    <!-- Paper abstract -->
+    <section class="section hero is-light">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered has-text-centered">
+          <div class="column is-four-fifths">
+            <h2 class="title is-3">What is SNAP?</h2>
+            <div class="content has-text-justified">
+              <p>
+                SNAP is an all-in one electronics toolkit that is purpose designed for students, by students.
+                SNAP features four key electronics tools in a sleek, portable package. With an integrated Logic
+                Analyzer, Oscilloscope, Waveform Generator, and Adjustable Power Supply,
+                SNAP is designed to provide engineers all the tools they need to succeed when working on electronics.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- End paper abstract -->
+
+
+    <!-- Features -->
+    <!-- <section class="hero is-small is-light">
+      <div class="hero-body">
+        <div class="container">
+          <h2 class="title is-3 has-text-centered">Project Features</h2>
+
+          <div class="columns is-multiline is-centered">
+            <div class="column is-one-third">
+              <div class="box has-text-centered p-5">
+                <span class="icon is-large mb-3">
+                  <i class="fas fa-microchip fa-2x"></i>
+                </span>
+                <h3 class="title is-5">Feature One</h3>
+                <p>Short placeholder text describing a major feature of the SNAP system. Replace with your real content.
+                </p>
+              </div>
+            </div>
+
+            <div class="column is-one-third">
+              <div class="box has-text-centered p-5">
+                <span class="icon is-large mb-3">
+                  <i class="fas fa-wave-square fa-2x"></i>
+                </span>
+                <h3 class="title is-5">Feature Two</h3>
+                <p>Placeholder description for another key capability or innovation. Replace with actual project
+                  details.</p>
+              </div>
+            </div>
+
+            <div class="column is-one-third">
+              <div class="box has-text-centered p-5">
+                <span class="icon is-large mb-3">
+                  <i class="fas fa-bolt fa-2x"></i>
+                </span>
+                <h3 class="title is-5">Feature Three</h3>
+                <p>A third placeholder item describing a unique advantage or system component. Replace as needed.</p>
+              </div>
+            </div>
+
+            <div class="column is-one-third">
+              <div class="box has-text-centered p-5">
+                <span class="icon is-large mb-3">
+                  <i class="fas fa-cogs fa-2x"></i>
+                </span>
+                <h3 class="title is-5">Feature Four</h3>
+                <p>Additional placeholder content that you can later fill in with real system specifications or
+                  features.</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section> -->
+
+
+    <section class="hero is-small">
+      <div class="hero-body">
+        <div class="container">
+          <h2 class="title is-3 has-text-centered">Measurement Module</h2>
+
+          <div class="columns is-vcentered mt-5">
+            <div class="column is-half">
+              <div class="content">
+                <h3 class="title is-4">High‑Speed Logic Analyzer & Oscilloscope</h3>
+                <ul>
+                  <li>10‑bit ADC for analog signal capture via standard BNC inputs</li>
+                  <li>Digital signal capture using standard Dupont connectors</li>
+                  <li>Supports −20V to +20V analog input range</li>
+                  <li>Accepts 3.3V to 5V logic levels</li>
+                  <li>SPI communication to mainboard for high‑speed data transfer</li>
+                  <li>View waveforms through PulseView or the SNAP web interface</li>
+                  <li>Up to 20 MS/s sampling on both analog and digital channels</li>
+                  <li>Over 130 supported protocol decoders</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="column is-half has-text-centered">
+              <video autoplay muted loop playsinline width="100%" preload="metadata">
+                <source src="static/videos/scopeani_square.mp4" type="video/mp4">
+              </video>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- OUTPUT MODULE (Improved Layout) -->
+    <section class="hero is-small">
+      <div class="hero-body">
+        <div class="container">
+          <h2 class="title is-3 has-text-centered">Output Module</h2>
+
+          <div class="columns is-vcentered mt-5">
+            <div class="column is-half">
+              <div class="content">
+                <h3 class="title is-4">Waveform Generator</h3>
+                <ul>
+                  <li>Generates sine, square, triangle, and sawtooth signals</li>
+                  <li>Output range from −5V to +5V</li>
+                  <li>Frequencies up to 500 kHz</li>
+                  <li>Standard BNC output connector</li>
+                </ul>
+
+                <h3 class="title is-4 mt-4">Adjustable Power Supply</h3>
+                <ul>
+                  <li>Dedicated outputs for 3.3V, 5V, and ground</li>
+                  <li>Configurable power rail capable of delivering up to 140W</li>
+                  <li>Banana jack compatible connections</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="column is-half has-text-centered">
+              <video autoplay muted loop playsinline width="100%" preload="metadata">
+                <source src="static/videos/psuvid_square.mp4" type="video/mp4">
+              </video>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- MAINBOARD (Improved Layout) -->
+    <section class="hero is-small">
+      <div class="hero-body">
+        <div class="container">
+          <h2 class="title is-3 has-text-centered">Mainboard</h2>
+
+          <div class="columns is-vcentered mt-5">
+            <div class="column is-half">
+              <div class="content">
+                <ul>
+                  <li>Acts as the central controller for all SNAP modules</li>
+                  <li>Powered via USB‑C or standard 5V barrel jack</li>
+                  <li>Custom GUI for sending commands and configuring modules</li>
+                  <li>I²C communication for commands and system control</li>
+                  <li>High‑speed SPI bus for transferring oscilloscope and analyzer data</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="column is-half has-text-centered">
+              <video autoplay muted loop playsinline width="100%" preload="metadata">
+                <source src="static/videos/mbvid_square.mp4" type="video/mp4">
+              </video>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- Youtube video -->
+    <!-- <section class="hero is-small is-light">
+      <div class="hero-body">
+        <div class="container"> -->
+    <!-- Paper video. -->
+    <!-- <h2 class="title is-3">Video Demo</h2>
+          <div class="columns is-centered has-text-centered">
+            <div class="column is-four-fifths">
+
+              <div class="publication-video"> -->
+    <!-- TODO: Replace with your YouTube video ID -->
+    <!-- <iframe src="https://www.youtube.com/embed/JkaxUblCGz0" frameborder="0"
+                  allow="autoplay; encrypted-media" allowfullscreen></iframe>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section> -->
+    <!-- End youtube video -->
+
+    <!-- Image carousel -->
+    <!-- <section class="hero is-small">
+        <div class="hero-body">
+          <div class="container">
+            <div id="results-carousel" class="carousel results-carousel">
+              <div class="item">
+                <img src="static/images/carousel1.jpg" alt="First research result visualization" loading="lazy" />
+                <h2 class="subtitle has-text-centered">
+                  First image description.
+                </h2>
+              </div>
+              <div class="item">
+                <img src="static/images/carousel2.jpg" alt="Second research result visualization" loading="lazy" />
+                <h2 class="subtitle has-text-centered">
+                  Second image description.
+                </h2>
+              </div>
+              <div class="item">
+                <img src="static/images/carousel3.jpg" alt="Third research result visualization" loading="lazy" />
+                <h2 class="subtitle has-text-centered">
+                  Third image description.
+                </h2>
+              </div>
+              <div class="item">
+                <img src="static/images/carousel4.jpg" alt="Fourth research result visualization" loading="lazy" />
+                <h2 class="subtitle has-text-centered">
+                  Fourth image description.
+                </h2>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section> -->
+    <!-- End image carousel -->
+
+    <!-- Video carousel -->
+    <!-- <section class="hero is-small">
+      <div class="hero-body">
+        <div class="container">
+          <h2 class="title is-3">Another Carousel</h2>
+          <div id="results-carousel" class="carousel results-carousel">
+            <div class="item item-video1">
+              <video poster="" id="video1" controls muted loop height="50%" preload="metadata">
+                <source src="static/videos/carousel1.mp4" type="video/mp4">
+              </video>
+            </div>
+            <div class="item item-video2">
+              <video poster="" id="video2" controls muted loop height="50%" preload="metadata">
+                <source src="static/videos/carousel2.mp4" type="video/mp4">
+              </video>
+            </div>
+            <div class="item item-video3">
+              <video poster="" id="video3" controls muted loop height="50%" preload="metadata">
+                <source src="static/videos/carousel3.mp4" type="video/mp4">
+              </video>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section> -->
+    <!-- End video carousel -->
+
+
+
+
+
+
+    <!-- Paper poster -->
+    <section class="hero is-small is-light">
+      <div class="hero-body">
+        <div class="container is-centered has-text-centered">
+          <h2 class="title">Design Expo Poster</h2>
+          <div class="content">
+            <p>
+              Missed us at the design expo? Check out our poster!
+            </p>
+          </div>
+          <div class="poster-container">
+            <object data="static/pdfs/poster_draft.svg" type="image/svg+xml" class="poster-svg">
+              <img src="static/pdfs/poster_draft.svg" alt="Design Expo Poster" class="poster-fallback">
+            </object>
+          </div>
+
+        </div>
+      </div>
+    </section>
+    <!--End paper poster -->
+
+
+
+    <!--BibTex citation -->
+    <!-- <section class="section" id="BibTeX">
+        <div class="container is-max-desktop content">
+          <div class="bibtex-header">
+            <h2 class="title">BibTeX</h2>
+            <button class="copy-bibtex-btn" onclick="copyBibTeX()" title="Copy BibTeX to clipboard">
+              <i class="fas fa-copy"></i>
+              <span class="copy-text">Copy</span>
+            </button>
+          </div>
+          <pre id="bibtex-code"><code>@article{YourPaperKey2024,
+  title={Your Paper Title Here},
+  author={First Author and Second Author and Third Author},
+  journal={Conference/Journal Name},
+  year={2024},
+  url={https://your-domain.com/your-project-page}
+}</code></pre>
+        </div>
+      </section>
+      End BibTex citation -->
+    <section class="section" id="Acknowledgements">
+      <div class="container is-max-desktop has-text-centered content">
+        <h2 class="title">Acknowledgements</h2>We would like to thank Professor Mark Brehob, and the EECS 473 Lab staff
+        (Matt Smith, James Carl, Anna Huang, Frederick Yang, and
+        Alec Zettel), for their support this semester. We would also like to thank Infineon for their financial support
+        of EECS 473.
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="container">
+        <div class="columns is-centered">
+          <div class="column is-8">
+            <div class="content">
+
+              <p>
+                This page was built using the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template"
+                  target="_blank">Academic
+                  Project Page Template</a> which was adopted from the <a href="https://nerfies.github.io"
+                  target="_blank">Nerfies</a> project page. <br> This website is licensed under a <a rel="license"
+                  href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank">Creative
+                  Commons Attribution-ShareAlike 4.0 International License</a>.
+              </p>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- GLTF Resources -->
+    <script src="https://unpkg.com/three@0.146.0/build/three.min.js"></script>
+    <script src="https://unpkg.com/three@0.146.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://unpkg.com/three@0.146.0/examples/js/controls/OrbitControls.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,2247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SNAP - ALL IN ONE ELECTRONICS WORKBENCH</title>
+    <link rel="icon" type="image/x-icon" href="https://eecs.umich.edu/courses/eng100/Pic/brehob.jpg">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+    <div class="dashboard">
+        <header class="hero">
+            <div class="hero-text">
+                <p class="eyebrow">Integrated electronics workbench</p>
+                <h1>SNAP Command Deck</h1>
+                <p class="hero-subtitle">EECS 473 Group 14</p>
+            </div>
+            <div class="hero-actions">
+                <div class="status-pill">
+                    <span class="status-indicator" id="statusIndicator" aria-live="polite"
+                        aria-label="Device disconnected"></span>
+                    <div>
+                        <p class="status-label">Workbench Link</p>
+                        <strong id="statusLabel">Disconnected</strong>
+                    </div>
+                </div>
+                <button class="ghost-btn" onclick="refreshPorts()">Refresh Ports</button>
+            </div>
+            
+        </header>
+    
+        
+        <div class="content">
+            <div class="sidebar-tabs">
+                <button class="tab-btn active" data-target="panel-connection">Device Connection</button>
+                <button class="tab-btn" data-target="panel-psu">Power Supply</button>
+                <button class="tab-btn" data-target="panel-wf">Waveform Generator</button>
+                <button class="tab-btn" data-target="panel-la">Logic Analyzer</button>
+                <button class="tab-btn" data-target="panel-scope">Oscilloscope</button>
+            </div>
+
+            
+            <div class ="content-col">
+                <!-- Main Column -->
+                <div class="main-column">
+                    <!-- Connection Section -->
+                    <div id="panel-connection" class="tab-panel active">
+                            <div class="section">
+                                <h2>                               
+                                    <span class="collapse-icon"> </span>
+                                    <span>Device Connection</span>
+                                    <span class="collapse-icon"> </span>
+                                </h2>
+
+                                <div class="section-content">
+                                    <div class="config-section">
+                                        <h3>Port Selection</h3>
+                                        <div class="input-group">
+                                            <label for="portSelect">Select Port</label>
+                                            <select id="portSelect">
+                                                <option value="">Loading ports...</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    
+
+                                    <div class="config-section">
+                                        <h3>USB Performance Test</h3>
+                                        <div class="input-group">
+                                            <label for="testSizeSelect">Test Size</label>
+                                            <select id="testSizeSelect">
+                                                <option value="64">64 KB (Quick)</option>
+                                                <option value="512" selected>512 KB (Standard)</option>
+                                                <option value="2048">2 MB (Full)</option>
+                                                <option value="51200">50 MB (Extended)</option>
+                                            </select>
+                                        </div>
+                                        <div class="module-status" style="margin-top: 15px;">
+                                            <div class="status-tile">
+                                                <span class="status-label">USB Throughput</span>
+                                                <span class="status-value" id="usbThroughput">--</span>
+                                            </div>
+                                            <div class="status-tile">
+                                                <span class="status-label">Transfer Time</span>
+                                                <span class="status-value" id="usbDuration">--</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="button-grid">
+                                        <button class="connect-btn" onclick="connectDevice()"> Establish Connection</button>
+                                        <button class="ghost-btn" onclick="pingDevice()"> Ping Device</button>
+                                        <button class="ghost-btn" onclick="testUsbSpeed()"> Test USB Speed</button>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>    
+                    <!-- End Connection Section -->
+
+                    <!-- PSU Section -->
+                    <div id="panel-psu" class="tab-panel">
+                        
+                            <div class="section">
+                                <h2>
+                                    <span class="status-indicator" id="psuIndicator"></span>
+                                    <span>USB-C Power Supply</span>
+                                    <span class="collapse-icon"> </span>
+
+                                </h2>
+
+
+                                <div class="section-content">
+                                    <div class="config-section" style="padding-top: 0;">
+                                        <h3>Live Telemetry</h3>
+                                        <div class="module-status">
+                                            <div class="status-tile">
+                                                <span class="status-label">Voltage (V)</span>
+                                                <span class="status-value" id="psu-voltage-actual">--</span>
+                                            </div>
+                                            <div class="status-tile">
+                                                <span class="status-label">Current (A)</span>
+                                                <span class="status-value" id="psu-current-actual">--</span>
+                                            </div>
+                                            <div class="status-tile">
+                                                <span class="status-label">Current Limit(A)</span>
+                                                <span class="status-value" id="psu-current-limit">--</span>
+                                            </div>
+                                            <div class="status-tile">
+                                                <span class="status-label">Temperature (°C)</span>
+                                                <span class="status-value" id="psu-temp">--</span>
+                                            </div>
+                                            <div class="status-tile">
+                                                <span class="status-label">5V Rail</span>
+                                                <span class="status-value" id="psu-5v-status">--</span>
+                                            </div>
+                                            <div class="status-tile">
+                                                <span class="status-label">3.3V Rail</span>
+                                                <span class="status-value" id="psu-3v3-status">--</span>
+                                            </div>
+                                            <div class="status-tile">
+                                                <span class="status-label">Requested V</span>
+                                                <span class="status-value" id="psu-voltage-req">--</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="config-section" id="PPSConfig" style="display: none;">
+                                        <h3>Variable Output Adjustment</h3>
+                                        <div class="input-group">
+                                            <label for="Voltage">Voltage (V):</label>
+                                            <input type="number" id="Voltage" value="5.0" min="0.0" max="20.0" step="0.1"
+                                                placeholder="Enter voltage...">
+                                        </div>
+                                    </div>
+
+                                    <div class="button-grid">
+                                        <button id="btn3V" class="psu-btn-off" onclick="toggle3V()">Toggle Fixed 3V</button>
+                                        <button id="btn5V" class="psu-btn-off" onclick="toggle5V()">Toggle Fixed 5V</button>
+                                    </div>
+                                    <button class="psu-btn-on" onclick="configurePSU()">Update PSU Configuration</button>
+
+                                    <!-- Capabilities Display Panel -->
+                                    <div id="psuCapabilitiesPanel" class="config-section" style="display: none; margin-top: 16px;">
+                                        <h3>Available Power Profiles</h3>
+                                        <div id="psuCapabilitiesTable">
+                                            <!-- Populated dynamically -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                    <!-- End PSU Stuff -->
+
+                    <!-- Waveform Section -->
+                    <div id="panel-wf" class="tab-panel">
+                            <div class="section">
+                                <h2> 
+                                    <span class="status-indicator" id="wfIndicator" aria-live="polite"
+                                        aria-label="WF disconnected"></span>
+                                    <span>Waveform Generator</span>
+                                    <span class="collapse-icon"> </span>
+                                    
+                                </h2>
+
+                                <div class="section-content">
+                                    <div class="module-status">
+                                        <div class="status-tile">
+                                            <p class="status-label">Current Shape</p>
+                                            <p class="status-value status-warn" id="waveformTypeStatus">Idle</p>
+                                        </div>
+                                        <div class="status-tile">
+                                            <p class="status-label">Amplitude</p>
+                                            <p class="status-value" id="waveformAmplitudeStatus">—</p>
+                                        </div>
+                                        <div class="status-tile">
+                                            <p class="status-label">Frequency</p>
+                                            <p class="status-value" id="waveformFrequencyStatus">—</p>
+                                        </div>
+                                        <div class="status-tile">
+                                            <p class="status-label">Last Update</p>
+                                            <p class="status-value" id="waveformUpdateStatus">—</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="config-section">
+                                        <h3>Waveform Parameters</h3>
+                                        <div class="input-group">
+                                            <label for="wfAmplitude">Amplitude (V):</label>
+                                            <input type="number" id="wfAmplitude" value="1.0" min="0" max="5.0" step="0.1"
+                                                placeholder="0.0 - 5.0 V">
+                                        </div>
+                                        <div class="input-group">
+                                            <label for="wfFrequency">Frequency (Hz):</label>
+                                            <input type="number" id="wfFrequency" value="10000" min="1" max="100000000" step="100"
+                                                placeholder="1 Hz - 100 MHz">
+                                        </div>
+                                        <div class="input-group">
+                                            <label for="wfOffset">Offset (V):</label>
+                                            <input type="number" id="wfOffset" value="0.0" min="0" max="5.0" step="0.1"
+                                                placeholder="0.0 - 5.0 V">
+                                        </div>
+                                        <div class="input-group">
+                                            <label for="wfPhase">Phase (rad):</label>
+                                            <input type="number" id="wfPhase" value="0.0" min="0" max="6.28" step="0.1"
+                                                placeholder="0.0 - 2π rad">
+                                        </div>
+                                        <!-- Pulse-specific parameter -->
+                                        <div class="input-group" id="dutyCycleGroup" style="display: none;">
+                                            <label for="wfDutyCycle">Duty Cycle (%):</label>
+                                            <input type="number" id="wfDutyCycle" value="10.0" min="0" max="100" step="1"
+                                                placeholder="0 - 100 %">
+                                        </div>
+                                        <!-- Ramp-specific parameter -->
+                                        <div class="input-group" id="rampDirectionGroup" style="display: none;">
+                                            <label for="wfUpwards">Direction:</label>
+                                            <select id="wfUpwards">
+                                                <option value="true">Upwards </option>
+                                                <option value="false">Downwards </option>
+                                            </select>
+                                        </div>
+                                        <button class="ghost-btn" onclick="resetWaveformDefaults()"
+                                            style="width: 100%; margin-top: 8px;">
+                                             Reset to Defaults
+                                        </button>
+                                    </div>
+
+                                    <div class="button-grid">
+                                        <button class="waveform-btn" id="btn-sine" onclick="sendWaveform('sine')"> Sine</button>
+                                        <button class="waveform-btn" id="btn-square" onclick="sendWaveform('square')">
+                                            Square</button>
+                                        <button class="waveform-btn" id="btn-triangle" onclick="sendWaveform('triangle')">
+                                            Triangle</button>
+                                        <button class="waveform-btn" id="btn-ramp" onclick="sendWaveform('ramp')"> Ramp</button>
+                                        <button class="waveform-btn" id="btn-pulse" onclick="sendWaveform('pulse')"> Pulse</button>
+                                        <button class="waveform-btn-red" id="btn-off" onclick="sendWaveform('off')"> OFF </button>
+
+                                    </div>
+                                </div>
+                            </div>
+                    
+                    </div>
+                    <!-- End Waveform Generator Section -->
+
+                    <!-- Logic Analyzer Section -->
+                    <div id="panel-la" class="tab-panel">
+                            <div class="section">
+                                <h2>
+                                    <span class="status-indicator" id="laIndicator" aria-live="polite"
+                                        aria-label="LA disconnected"></span>
+                                    <span>Logic Analyzer</span>
+                                    <span class="collapse-icon"> </span>
+                                </h2>
+
+                                <div class="section-content">
+                                    <div class="module-status">
+                                        <div class="status-tile">
+                                            <p class="status-label">Sample Rate</p>
+                                            <p class="status-value" id="laFrequencyStatus">1.0 MHz</p>
+                                        </div>
+                                        <div class="status-tile">
+                                            <p class="status-label">Capture State</p>
+                                            <p class="status-value status-warn" id="laCaptureStatus">Idle</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="config-section">
+                                        <div class="input-group">
+                                            <label for="frequency">Frequency (Hz):</label>
+                                            <input type="number" id="frequency" value="100000" min="1" max="100000000"
+                                                placeholder="Enter frequency...">
+                                            <button class="la-btn" onclick="configureLA()"> Configure</button>
+                                        </div>
+                                        <div class="input-group">
+                                            <label for="numChunks">Num Chunks:</label>
+                                            <input type="number" id="numChunks" value="3" min="1" max="1000"
+                                                placeholder="Enter number of chunks...">
+                                        </div>
+                                    </div>
+
+                                    <div class="button-grid">
+                                        <button class="la-btn" onclick="laStart()"> Start Capture</button>
+                                        <button class="la-btn" onclick="laStop()"> Stop Capture</button>
+                                        <button class="la-btn" onclick="laGetChunk()"> Get Data Chunk</button>
+                                    </div>
+
+                                    <!-- Waveform visualization canvas -->
+                                    <div id="waveformContainer" class="waveform-panel">
+                                        <div class="waveform-toolbar">
+                                            <div class="toolbar-meta">
+                                                <h3> Sample Data Visualization</h3>
+                                                <p class="sample-meta" id="sampleInfo"></p>
+                                            </div>
+                                            <div class="toolbar-actions">
+                                                <button class="btn-compact la-btn" onclick="zoomIn()">+ Zoom In</button>
+                                                <button class="btn-compact la-btn" onclick="zoomOut()">- Zoom Out</button>
+                                                <button class="btn-compact la-btn" onclick="resetZoom()"> Reset</button>
+                                            </div>
+                                        </div>
+                                        <canvas id="waveformCanvas" width="1200" height="300"></canvas>
+                                        <p class="helper-text"> Tip: Click and drag to pan • Scroll to zoom • Use buttons for
+                                            precise
+                                            control</p>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                    <!-- end LA -->
+
+
+                    <!-- Oscilloscope Section -->
+                    <div id="panel-scope" class="tab-panel">
+                        <div class="oscope-section">
+                            <h2>
+                                <span class="status-indicator" id="scopeIndicator"></span>
+                                <span>Oscilloscope</span>
+                                <span class="collapse-icon"></span>
+                            </h2>
+
+                            <!-- LEFT: Thin Control Column -->
+                            <div class="oscope-controls">
+                                <div class="config-section">
+                                    <div class="input-group">
+                                        <label for="scopeFreq">Sample Freq (Hz):</label>
+                                        <input id="scopeFreq" type="number" value="1000000" style="width:100px;">
+                                        <button id="scopeConfigBtn" class="button-grid os-btn">Set</button>
+                                    </div>
+                                    <div class="input-group">
+                                        <label for="scopeSamples">Num Samples:</label>
+                                        <input id="scopeSamples" type="number" value="1" style="width:100px;">
+                                    </div>
+                                </div>
+
+                                <div class="input-group">
+                                    <button id="scopeStartContinuosBtn" class = "button-grid os-btn center-buttons">Start Continuous</button>
+                                    <button id="scopeSingleBtn" class="button-grid os-btn center-buttons">Single Capture</button>
+                                </div>
+
+                                <div class="config-section">
+                                    <div class="input-group">
+                                        <label for="vdiv">Volts/Div:</label>
+                                        <input id="vdiv" type="number" step="0.1" value="1.0" style="width:80px;">
+                                    </div>
+
+                                    <div class="input-group">
+                                        <label for="tdiv">Time/Div:</label>
+                                        <input id="tdiv" type="number" step="1" value="100" style="width:80px;">
+                                    </div>
+
+                                    <div class="input-group">
+                                        <button id="autoscaleBtn" class="button-grid os-btn">Autoscale</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <!-- end oscope-->
+                </div>  <!-- End Main Column -->
+
+                <div class="telemetry-column">
+                    <!-- only visible on oscope tab -->
+                    <div id="oscopeTelemetry" class="section" style="display:none;">
+                        
+                        <h2><span class="collapse-icon"></span> Oscilloscope Display<span class="collapse-icon"></span></h2>
+                        <canvas id="scopeCanvas" width="1000" height="300"></canvas>
+                    </div>
+
+                    <!-- always visible but will stretch telemetry data when oscope is there-->
+                    <div class="section" id="response-log-section">
+                        <h2>
+                            <span class="collapse-icon"></span>
+                             System Log
+                            <span class="collapse-icon"></span>
+                        </h2>
+                        <div class="section-content">
+                            <div class="response-box" id="responseBox">
+                                <p class="placeholder-text"> System ready. Awaiting commands...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- End Telemetry data  -->
+
+            </div> <!-- End content-col -->
+            <!-- Telemetry Column (Right Side) -->
+
+        </div> <!-- End Content area -->
+
+    </div> <!-- End Dashboard  -->
+
+
+    <script>
+        if (window.psuStatusInterval) clearInterval(window.psuStatusInterval);
+        if (window.psuLifeInterval) clearInterval(window.psuLifeInterval);
+
+        window.psuStatusInterval = setInterval(queryPSUStatus, 5000);
+        window.psuLifeInterval = setInterval(queryPSULife, 5000);
+
+        let isConnected = false;
+
+        let isPDWFConnected = false;
+        let isUSBCConnected = false;
+        let isLAOSConnected = false;
+
+        let selectedPDSlot = -1;
+        let fixed5VEn = false;
+        let fixed3VEn = false;
+
+        let availablePorts = [];
+
+        
+        //==========================
+        //      oscope functions
+        //==========================
+        // Oscilloscope state
+        let scopeData = [];
+        let scopeRunning = false;
+        let scopeAnimId = null;
+        let lastSamples = [];
+        let isContinuous = false;
+        let continuousTimer = null;
+
+        function addLog(line) {
+            const responseBox = document.getElementById('responseBox');
+            if (!responseBox) return;
+
+            const time = new Date().toLocaleTimeString();
+
+            const item = document.createElement('div');
+            item.className = 'response-item success';
+
+            item.innerHTML = `
+                <div class="response-time"> ${time}</div>
+                <div class="response-message">${line}</div>
+            `;
+
+            // Remove placeholder "Awaiting commands..."
+            if (
+                responseBox.children.length === 1 &&
+                responseBox.textContent.includes('Awaiting commands')
+            ) {
+                responseBox.innerHTML = '';
+            }
+
+            responseBox.insertBefore(item, responseBox.firstChild);
+
+            // Cap at 50 entries
+            while (responseBox.children.length > 50) {
+                responseBox.removeChild(responseBox.lastChild);
+            }
+        }
+
+        // function setStatusValue(id, text, cls) {
+        //     const el = document.getElementById(id);
+        //     if (!el) {
+        //     // Fallback: just log it
+        //     addLog(`[status:${id}] ${text}`);
+        //     return;
+        //     }
+        //     el.textContent = text;
+        //     el.className = 'status-pill ' + cls;
+        // }
+        function formatFrequency(freqHz) {
+            const f = Number(freqHz);
+            if (!isFinite(f) || f <= 0) return `${freqHz} Hz`;
+            if (f >= 1e6) return (f / 1e6).toFixed(2) + ' MHz';
+            if (f >= 1e3) return (f / 1e3).toFixed(2) + ' kHz';
+            return f.toFixed(0) + ' Hz';
+        }
+
+        function setScopeStatus(text, cls) {
+            const el = document.getElementById('scopeStatus');
+            el.textContent = text;
+            el.className = 'status-pill ' + cls;
+        }
+
+        async function osStart() {
+            try {
+                const response = await fetch('/api/scope/start', {
+                    method: 'POST'
+                });
+                const data = await response.json();
+
+                // Log to browser devtools console
+                console.log('[OS START RESPONSE]', data);
+
+                // Log to the on-page log window
+                addLog(
+                    `[${new Date().toISOString()}] /api/scope/start response:\n` +
+                    JSON.stringify(data, null, 2)
+                );
+
+                if (data.success) {
+                    setStatusValue('osCaptureStatus', 'Capturing', 'status-good');
+                } else {
+                    setStatusValue('osCaptureStatus', 'Start failed', 'status-bad');
+                }
+
+                addResponse(
+                    data.success ? ' ' + data.message : ' ' + data.message,
+                    data.response || null,
+                    data.success,
+                    data
+                );
+            } catch (error) {
+                console.error('[OS START ERROR]', error);
+                setStatusValue('osCaptureStatus', 'Start error', 'status-bad');
+                addResponse(' Error starting OS', error.message, false);
+                addLog(
+                    `[${new Date().toISOString()}] /api/scope/start ERROR:\n` +
+                    String(error)
+                );
+            }
+        }
+
+        async function singleShot(){
+            //first chunk has one unused bit of data at the end. this should call start then getchunk
+            osStart();
+            osGetChunk(true);
+            osStop();
+        }
+
+        async function osGetChunk(singleShot = false) {
+            // NOTE: we don't actually use numChunks, so we removed it.
+            try {
+                const numSamples = parseInt(document.getElementById("scopeSamples").value, 10);
+
+                const response = await fetch('/api/scope/get_chunk', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ num_samples: numSamples })
+                });
+
+                const data = await response.json();
+
+                if (data.success && data.data_hex) {
+                    const samples = parseScopeData(data.data_hex);
+                    lastSamples = samples;
+
+                    // Always update waveform
+                    drawScopeWaveform(lastSamples);
+
+                    // Always update status bar
+                    //setScopeStatus(samples.length + ' samples', 'status-good');
+                    setStatusValue('osCaptureStatus', `Data ${data.data_hex.length} B`, 'status-good');
+
+                    // ---- EVERYTHING BELOW THIS is ONLY for single-shot mode ----
+                    if (singleShot) {
+
+                        addLog('Single capture: ' + data.message);
+
+                        // Build hex dump
+                        let sampleDisplay = `Total bytes: ${data.data_hex.length}\n\n`;
+                        const bytesToShow = Math.min(256, data.data_hex.length);
+                        sampleDisplay += `First ${bytesToShow} bytes (hex dump):\n`;
+
+                        for (let i = 0; i < bytesToShow; i += 16) {
+                            const offset = i.toString(16).padStart(4, '0');
+                            const slice = data.data_hex.slice(i, i + 16);
+
+                            const hexBytes = slice.map(b => b.toString(16).padStart(2, '0')).join(' ');
+                            const asciiBytes = slice.map(b => 
+                                (b >= 32 && b <= 126) ? String.fromCharCode(b) : '.'
+                            ).join('');
+
+                            sampleDisplay += `${offset}: ${hexBytes.padEnd(48, ' ')} | ${asciiBytes}\n`;
+                        }
+
+                        if (data.data_hex.length > bytesToShow) {
+                            sampleDisplay += `\n... (${data.data_hex.length - bytesToShow} more bytes)\n`;
+                            sampleDisplay += `\n All ${data.data_hex.length} samples are shown in the waveform above.\n`;
+                        }
+
+                        addResponse(
+                            ' ' + data.message,
+                            sampleDisplay,
+                            true,
+                            data
+                        );
+                    }
+                } else {
+                    addResponse(
+                        data.success ? ' ' + data.message : ' ' + data.message,
+                        data.response || null,
+                        data.success,
+                        data
+                    );
+                }
+            } catch (error) {
+                setStatusValue('osCaptureStatus', 'Data error', 'status-bad');
+                addResponse(' Error getting chunk', error.message, false);
+            }
+        }
+
+
+        function parseScopeData(dataBytes) {
+            if (!Array.isArray(dataBytes)) {
+                addLog('parseScopeData: expected array of bytes');
+                return [];
+            }
+
+            const bytes = Uint8Array.from(dataBytes);
+            const samples = [];
+
+            for (let i = 0; i + 1 < bytes.length; i += 2) {
+                
+                const raw16 = bytes[i] | (bytes[i + 1] << 8);
+
+                // Extract 10-bit ADC data (0..1023)
+                const adc10 = raw16 & 0x03FF;
+
+                // Convert to signed two’s complement (–512..+511)
+                const signed10 = (adc10 & 0x200) ? (adc10 - 1024) : adc10;
+
+                samples.push(signed10);
+            }
+
+            return samples;
+        }
+
+
+        function drawScopeWaveform(samples) {
+            const SAMPLE_RATE = parseFloat(document.getElementById("scopeFreq").value);
+
+            const canvas = document.getElementById('scopeCanvas');
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width;
+            const h = canvas.height;
+
+            ctx.clearRect(0, 0, w, h);
+
+            const vdiv = parseFloat(document.getElementById('vdiv').value);
+            const tdiv = parseInt(document.getElementById('tdiv').value, 10);
+
+            drawGrid(ctx, w, h);
+            drawAxisLabels(ctx, w, h, vdiv, tdiv);
+
+            if (!samples || samples.length === 0) return;
+
+            const divisions = 10;
+            const waveformDivisions = divisions - 2;  // actual waveform area = 8 divisions
+
+            // vertical scale: pixels per volt
+            const pixelsPerVolt = (h / waveformDivisions) / vdiv;
+
+            // horizontal scale: pixels per sample (tdiv = samples / division)
+            const timePerDiv = tdiv / SAMPLE_RATE;        // seconds per division
+            const pixelsPerSecond = (w / divisions) / timePerDiv;
+            const dt = 1 / SAMPLE_RATE;                  // seconds per sample
+
+
+            ctx.beginPath();
+
+            // Real scaling from your calibration:
+            // sample = -35 -> -3 V
+            // sample = 115 -> +3 V
+            const VOLTS_PER_COUNT = 0.04;  // 40 mV per count
+            const OFFSET_VOLTS    = -0.6;  // volts when sample = 0
+
+
+            let t = 0;  // time in seconds
+
+            for (let i = 0; i < samples.length; i++) {
+                const volts = (samples[i] * VOLTS_PER_COUNT + OFFSET_VOLTS)*0.75;
+                const y = h / 2 - volts * pixelsPerVolt;
+
+                const x = t * pixelsPerSecond;
+
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+
+                t += dt;
+            }
+
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = "#10b981";
+            ctx.stroke();
+        }
+
+        function adcCodeToVolts(code) {
+            const VOLTS_PER_COUNT = 0.04;  // 40 mV per count
+            const OFFSET_VOLTS    = -0.6;  // volts when sample = 0
+            return (code * VOLTS_PER_COUNT + OFFSET_VOLTS)*0.75;
+        }
+                
+
+
+        function autoscale(samples) {
+            console.log("AUTOSCALE CALLED");
+            if (!samples || samples.length === 0) return;
+
+            // Convert all samples to volts
+            const volts = samples.map(adcCodeToVolts);
+
+            // Get min/max
+            let minV = Math.min(...volts);
+            let maxV = Math.max(...volts);
+
+            // Add padding (20% headroom)
+            const padding = 0.2 * (maxV - minV);
+            minV -= padding;
+            maxV += padding;
+
+            const totalRange = maxV - minV;
+
+            // We draw waveform over 8 vertical divisions
+            const waveformDivs = 8;
+            console.log("Old v/div:", document.getElementById('vdiv').value);
+
+            // v/div = volts per division
+            const vdiv = totalRange / waveformDivs;
+            console.log("New v/div:", vdiv);
+
+            
+            // Update UI
+            document.getElementById('vdiv').value = vdiv.toFixed(2);
+
+            
+            // Time autoscale:
+            const tdiv = autoscaleTime(samples);
+            document.getElementById('tdiv').value = tdiv;
+
+            //drawGrid(ctx, w, h);
+            //drawAxisLabels(ctx, w, h, vdiv, tdiv);
+            drawScopeWaveform(samples);
+        }
+
+
+
+
+        function detectPeriod(samples) {
+            const volts = samples.map(adcCodeToVolts);
+
+            let crossings = [];
+            for (let i = 1; i < volts.length; i++) {
+                if (volts[i - 1] < 0 && volts[i] >= 0) {
+                    crossings.push(i);
+                }
+            }
+
+            if (crossings.length < 2) return null;
+
+            let diffs = [];
+            for (let i = 1; i < crossings.length; i++) {
+                diffs.push(crossings[i] - crossings[i - 1]);
+            }
+
+            const avgSamples = diffs.reduce((a, b) => a + b, 0) / diffs.length;
+            return avgSamples;
+        }
+
+
+        function autoscaleTime(samples) {
+            const P = detectPeriod(samples);
+            if (!P) {
+                // fallback if no period detected: show all samples
+                return Math.max(Math.floor(samples.length / 10), 1);
+            }
+
+            // Target: show ~1.5 cycles across 10 divisions
+            let tdiv = (P * 5) / 10;
+
+            // clamp small values
+            if (tdiv < 1) tdiv = 1;
+
+            return Math.floor(tdiv);
+        }
+
+        function drawGrid(ctx, w, h) {
+            const divisions = 10;
+            ctx.strokeStyle = "rgba(255,255,255,0.55)";
+            ctx.lineWidth = 1;
+
+            for (let i = 0; i <= divisions; i++) {
+                const x = (w / divisions) * i;
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, h);
+                ctx.stroke();
+            }
+
+            for (let j = 0; j <= divisions; j++) {
+                const y = (h / divisions) * j;
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(w, y);
+                ctx.stroke();
+            }
+        }   
+            
+        function drawAxisLabels(ctx, w, h, vdiv, tdiv) {
+            const SAMPLE_RATE = parseFloat(document.getElementById("scopeFreq").value);
+            const dt = 1 / SAMPLE_RATE;  // seconds per sample
+
+            ctx.fillStyle = "rgba(255,255,255,0.95)";
+            ctx.font = "12px sans-serif";
+            const divisions = 10;
+
+            // Y-axis labels (volts)
+            ctx.textAlign = "left";
+            const voltsPerDiv = vdiv;
+
+            for (let i = 0; i <= divisions; i++) {
+                const y = (h / divisions) * i;
+                const dv = ((divisions / 2) - i) * voltsPerDiv;  
+                ctx.fillText(dv.toFixed(1) + " V", 5, y - 2);
+            }
+
+            // X-axis labels (sample index)
+            // X-axis labels (time)
+            ctx.textAlign = "center";
+
+            const samplesPerDiv = tdiv;
+            const timePerDivSec = samplesPerDiv / SAMPLE_RATE;
+
+            for (let i = 0; i <= divisions; i++) {
+                const x = (w / divisions) * i;
+                const tSec = i * timePerDivSec;
+
+                let label;
+                if (tSec >= 1) {
+                    label = tSec.toFixed(2) + " s";
+                } else if (tSec >= 0.001) {
+                    label = (tSec * 1000).toFixed(2) + " ms";
+                } else {
+                    label = (tSec * 1e6).toFixed(2) + " µs";
+                }
+
+                ctx.fillText(label, x, h - 5);
+            }
+            
+
+            // Label 0V at center
+            ctx.textAlign = "right";
+            ctx.fillText("0 V", w - 5, h / 2 - 4);
+        }
+
+        async function configureOS() {
+            // Use the existing "scopeFreq" input (Sample Freq (Hz))
+            const frequency = document.getElementById('scopeFreq').value;
+
+            try {
+                const response = await fetch('/api/scope/config', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ frequency: Number(frequency) })
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    setStatusValue('osFrequencyStatus', formatFrequency(frequency), 'status-good');
+                } else {
+                    setStatusValue('osFrequencyStatus', 'Config error', 'status-bad');
+                }
+
+                addResponse(
+                    data.success ? ' ' + data.message : ' ' + data.message,
+                    data.response || null,
+                    data.success,
+                    data
+                );
+            } catch (error) {
+                setStatusValue('osFrequencyStatus', 'Config error', 'status-bad');
+                addResponse(' Error configuring OS', error.message, false);
+            }
+        }
+
+        function startContinuous() {
+            if (isContinuous) return; // already running
+
+            isContinuous = true;
+
+            // Call immediately once
+            osGetChunk(false);
+
+            // Then repeatedly
+            continuousTimer = setInterval(() => {
+                if (!isContinuous) return;
+                osGetChunk(false);
+            }, 50); // 50 ms = 20 Hz
+        }
+
+        async function osStop() {
+            try {
+                const response = await fetch('/api/scope/stop', {
+                    method: 'POST'
+                });
+                const data = await response.json();
+
+                // Log to browser devtools console
+                console.log('[OS STOP RESPONSE]', data);
+
+                // Log to the on-page log window
+                addLog(
+                    `[${new Date().toISOString()}] /api/scope/stop response:\n` +
+                    JSON.stringify(data, null, 2)
+                );
+
+                if (data.success) {
+                    setStatusValue('osCaptureStatus', 'Idle', 'status-warn');
+                } else {
+                    setStatusValue('osCaptureStatus', 'Stop failed', 'status-bad');
+                }
+                isContinuous = false;
+
+                if (continuousTimer) {
+                    clearInterval(continuousTimer);
+                    continuousTimer = null;
+                }
+
+                addResponse(
+                    data.success ? ' ' + data.message : ' ' + data.message,
+                    data.response || null,
+                    data.success,
+                    data
+                );
+            } catch (error) {
+                console.error('[OS STOP ERROR]', error);
+                setStatusValue('osCaptureStatus', 'Stop error', 'status-bad');
+                addResponse(' Error stopping OS', error.message, false);
+                addLog(
+                    `[${new Date().toISOString()}] /api/scope/stop ERROR:\n` +
+                    String(error)
+                );
+            }
+        }
+
+        function activateTab(targetId) {
+            document.querySelector('.content-col').classList.toggle(
+                'oscope-active',
+                targetId === 'panel-scope'
+            );
+        }
+
+
+        //==========================
+        //      end oscope functions
+        //==========================
+
+
+        // Toggle section collapse/expand
+        function toggleSection(headerElement) {
+            const icon = headerElement.querySelector('.collapse-icon');
+            const content = headerElement.nextElementSibling;
+
+            if (content && content.classList.contains('section-content')) {
+                icon.classList.toggle('collapsed');
+                content.classList.toggle('collapsed');
+            }
+        }
+
+        //switch tabs for modules
+        document.querySelectorAll(".tab-btn").forEach(btn => {
+            btn.addEventListener("click", () => {
+
+                // button active state
+                document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+                btn.classList.add("active");
+
+                // get target ID
+                const target = btn.getAttribute("data-target");
+
+                // show proper panel
+                document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+                document.getElementById(target).classList.add("active");
+
+                // toggle oscope layout class
+                const contentCol = document.querySelector(".content-col");
+                if (target === "panel-scope") {
+                    contentCol.classList.add("oscope-active");
+                } else {
+                    contentCol.classList.remove("oscope-active");
+                }
+
+                // Show oscope telemetry only on oscope tab
+                document.getElementById("oscopeTelemetry").style.display =
+                    (target === "panel-scope") ? "block" : "none";
+            });
+        });
+
+
+        function expandSection(headerElement) {
+            const icon = headerElement.querySelector('.collapse-icon');
+            const content = headerElement.nextElementSibling;
+
+            if (content && content.classList.contains('section-content')) {
+                icon.classList.remove('collapsed');
+                content.classList.remove('collapsed');
+            }
+        }
+
+        function collapseSection(headerElement) {
+            const icon = headerElement.querySelector('.collapse-icon');
+            const content = headerElement.nextElementSibling;
+
+            if (content && content.classList.contains('section-content')) {
+                icon.classList.add('collapsed');
+                content.classList.add('collapsed');
+            }
+        }
+
+
+
+        // Waveform visualization state
+        let allSampleData = [];
+        let viewStartSample = 0;
+        let samplesPerScreen = 1000;
+        let isDragging = false;
+        let dragStartX = 0;
+        let dragStartSample = 0;
+        let rafPending = false;
+        let cachedCanvasCtx = null;
+        let gridCanvas = null;
+        const STATUS_CLASSES = ['status-good', 'status-warn', 'status-bad'];
+
+        // Load ports on page load
+        window.addEventListener('DOMContentLoaded', async function () {
+            // ----- OSCILLOSCOPE BUTTONS -----
+            if (document.getElementById('scopeConfigBtn'))
+                document.getElementById('scopeConfigBtn').onclick = configureOS;
+
+            if (document.getElementById('scopeStartContinuosBtn'))
+                document.getElementById('scopeStartContinuosBtn').onclick = () => startContinuous();
+
+            if (document.getElementById('scopeSingleBtn'))
+                document.getElementById('scopeSingleBtn').onclick = () => osGetChunk(true);
+
+            if (document.getElementById('autoscaleBtn'))
+                document.getElementById('autoscaleBtn').onclick = () => autoscale(lastSamples);
+            
+            await refreshPorts();
+            setupCanvasInteraction();
+            // Auto-connect to default port after loading
+            await connectDevice();
+            // Send ping to verify connection
+            //await pingDevice();
+            //initializeModuleStatus();
+            
+        });
+
+        function initializeModuleStatus() {
+            const voltageInput = document.getElementById('Voltage');
+            if (voltageInput) {
+                setStatusValue('psuVoltageStatus', formatVoltage(voltageInput.value || 0), 'status-good');
+            }
+            setStatusValue('psuOutputStatus', 'Standby', 'status-warn');
+            setStatusValue('waveformTypeStatus', 'Idle', null);
+            setStatusValue('waveformAmplitudeStatus', '—', null);
+            setStatusValue('waveformFrequencyStatus', '—', null);
+            setStatusValue('waveformUpdateStatus', 'Awaiting command', null);
+
+            const laFrequencyInput = document.getElementById('frequency');
+            if (laFrequencyInput) {
+                setStatusValue('laFrequencyStatus', formatFrequency(laFrequencyInput.value || 0), null);
+            }
+            setStatusValue('laCaptureStatus', 'Idle', 'status-warn');
+        }
+
+
+        // Analyzer mode state
+
+        function setStatusValue(elementId, value, stateClass = null) {
+            const el = document.getElementById(elementId);
+            if (!el) return;
+            el.textContent = value;
+            STATUS_CLASSES.forEach(cls => el.classList.remove(cls));
+            if (stateClass) {
+                el.classList.add(stateClass);
+            }
+        }
+
+        function formatVoltage(val) {
+            const num = Number(val);
+            if (Number.isNaN(num)) return `${val} V`;
+            return `${num.toFixed(2)} V`;
+        }
+
+        function formatFrequency(val) {
+            const num = Number(val);
+            if (Number.isNaN(num)) return `${val} Hz`;
+            if (num >= 1_000_000_000) {
+                return `${(num / 1_000_000_000).toFixed(2)} GHz`;
+            } else if (num >= 1_000_000) {
+                return `${(num / 1_000_000).toFixed(2)} MHz`;
+            } else if (num >= 1_000) {
+                return `${(num / 1_000).toFixed(2)} kHz`;
+            }
+            return `${num} Hz`;
+        }
+
+        function formatTimeStamp() {
+            const now = new Date();
+            return now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        }
+
+        function capitalizeWord(word) {
+            if (!word) return '';
+            return word.charAt(0).toUpperCase() + word.slice(1);
+        }
+
+        function setupCanvasInteraction() {
+            const canvas = document.getElementById('waveformCanvas');
+
+            // Mouse wheel for zooming (throttled with requestAnimationFrame)
+            canvas.addEventListener('wheel', function (e) {
+                e.preventDefault();
+                if (allSampleData.length === 0) return;
+                if (rafPending) return;
+
+                rafPending = true;
+                requestAnimationFrame(() => {
+                    const zoomFactor = e.deltaY > 0 ? 1.2 : 0.8;
+                    const oldSamplesPerScreen = samplesPerScreen;
+                    samplesPerScreen = Math.max(100, Math.min(allSampleData.length, samplesPerScreen * zoomFactor));
+
+                    // Zoom towards mouse position
+                    const mouseX = e.offsetX;
+                    const canvasWidth = canvas.offsetWidth;
+                    const mouseRatio = mouseX / canvasWidth;
+
+                    const centerSample = viewStartSample + oldSamplesPerScreen * mouseRatio;
+                    viewStartSample = Math.max(0, Math.min(allSampleData.length - samplesPerScreen,
+                        centerSample - samplesPerScreen * mouseRatio));
+
+                    drawWaveform(allSampleData);
+                    rafPending = false;
+                });
+            });
+
+            // Mouse dragging for panning
+            canvas.addEventListener('mousedown', function (e) {
+                if (allSampleData.length === 0) return;
+                isDragging = true;
+                dragStartX = e.offsetX;
+                dragStartSample = viewStartSample;
+                canvas.style.cursor = 'grabbing';
+            });
+
+            canvas.addEventListener('mousemove', function (e) {
+                if (!isDragging || allSampleData.length === 0) return;
+                if (rafPending) return;
+
+                rafPending = true;
+                requestAnimationFrame(() => {
+                    const deltaX = e.offsetX - dragStartX;
+                    const canvasWidth = canvas.offsetWidth;
+                    const deltaSamples = -(deltaX / canvasWidth) * samplesPerScreen;
+
+                    viewStartSample = Math.max(0, Math.min(allSampleData.length - samplesPerScreen,
+                        dragStartSample + deltaSamples));
+
+                    drawWaveform(allSampleData);
+                    rafPending = false;
+                });
+            });
+
+            canvas.addEventListener('mouseup', function () {
+                isDragging = false;
+                canvas.style.cursor = 'grab';
+            });
+
+            canvas.addEventListener('mouseleave', function () {
+                isDragging = false;
+                canvas.style.cursor = 'grab';
+            });
+        }
+
+        function zoomIn() {
+            if (allSampleData.length === 0) return;
+            samplesPerScreen = Math.max(100, samplesPerScreen * 0.5);
+            viewStartSample = Math.max(0, Math.min(allSampleData.length - samplesPerScreen, viewStartSample));
+            drawWaveform(allSampleData);
+        }
+
+        function zoomOut() {
+            if (allSampleData.length === 0) return;
+            samplesPerScreen = Math.min(allSampleData.length, samplesPerScreen * 2);
+            viewStartSample = Math.max(0, Math.min(allSampleData.length - samplesPerScreen, viewStartSample));
+            drawWaveform(allSampleData);
+        }
+
+        function resetZoom() {
+            if (allSampleData.length === 0) return;
+            viewStartSample = 0;
+            samplesPerScreen = Math.min(1000, allSampleData.length);
+            drawWaveform(allSampleData);
+        }
+
+        async function refreshPorts() {
+            try {
+                const response = await fetch('/api/ports');
+                const data = await response.json();
+
+                if (data.success && data.ports.length > 0) {
+                    availablePorts = data.ports;
+                    const portSelect = document.getElementById('portSelect');
+                    portSelect.innerHTML = '';
+
+                    data.ports.forEach((port, index) => {
+                        const option = document.createElement('option');
+                        option.value = port.device;
+                        option.textContent = `${port.device} - ${port.description}`;
+                        portSelect.appendChild(option);
+                    });
+
+                    addResponse(` Found ${data.ports.length} port(s)`, null, true);
+                } else if (data.success && data.ports.length === 0) {
+                    const portSelect = document.getElementById('portSelect');
+                    portSelect.innerHTML = '<option value="">No devices found</option>';
+                    addResponse(' No matching devices found. Check USB connection.', null, false);
+                } else {
+                    addResponse(' ' + data.message, null, false);
+                }
+            } catch (error) {
+                addResponse(' Error fetching ports', error.message, false);
+            }
+        }
+
+        function updateStatus(connected) {
+            isConnected = connected;
+            const indicator = document.getElementById('statusIndicator');
+            const label = document.getElementById('statusLabel');
+
+            if (indicator) {
+                indicator.classList.toggle('connected', connected);
+                indicator.setAttribute('aria-label', connected ? 'Device connected' : 'Device disconnected');
+            }
+
+            if (label) {
+                label.textContent = connected ? 'Connected' : 'Disconnected';
+            }
+        }
+
+        function drawWaveform(dataBytes) {
+            const canvas = document.getElementById('waveformCanvas');
+            const container = document.getElementById('waveformContainer');
+            const sampleInfo = document.getElementById('sampleInfo');
+
+            // Cache context with performance options
+            if (!cachedCanvasCtx) {
+                cachedCanvasCtx = canvas.getContext('2d', { alpha: false, desynchronized: true });
+            }
+            const ctx = cachedCanvasCtx;
+
+            // Store all sample data
+            allSampleData = dataBytes;
+
+            // Show the canvas container
+            container.classList.add('visible');
+
+            // Create grid canvas once
+            if (!gridCanvas) {
+                gridCanvas = document.createElement('canvas');
+                gridCanvas.width = canvas.width;
+                gridCanvas.height = canvas.height;
+                const gridCtx = gridCanvas.getContext('2d', { alpha: true });
+
+                // Draw grid once to separate canvas
+                gridCtx.strokeStyle = 'rgba(56, 189, 248, 0.1)';
+                gridCtx.lineWidth = 1;
+                for (let i = 0; i < gridCanvas.height; i += 30) {
+                    gridCtx.beginPath();
+                    gridCtx.moveTo(0, i);
+                    gridCtx.lineTo(gridCanvas.width, i);
+                    gridCtx.stroke();
+                }
+                for (let i = 0; i < gridCanvas.width; i += 50) {
+                    gridCtx.beginPath();
+                    gridCtx.moveTo(i, 0);
+                    gridCtx.lineTo(i, gridCanvas.height);
+                    gridCtx.stroke();
+                }
+            }
+
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw pre-rendered grid
+            ctx.drawImage(gridCanvas, 0, 0);
+
+            // Update info display
+            const endSample = Math.min(viewStartSample + samplesPerScreen, allSampleData.length);
+            sampleInfo.textContent = `Showing samples ${viewStartSample} - ${endSample} of ${allSampleData.length} (${((samplesPerScreen / allSampleData.length) * 100).toFixed(1)}% visible)`;
+
+            // Get the visible portion of data
+            const visibleData = allSampleData.slice(viewStartSample, endSample);
+
+            // Downsample if we have more samples than pixels to avoid unnecessary rendering
+            const pixelsAvailable = canvas.width;
+            let displayData = visibleData;
+            let downsampleRatio = 1;
+
+            if (visibleData.length > pixelsAvailable * 2) {
+                // Downsample: take max/min for each pixel range to preserve signal features
+                downsampleRatio = Math.ceil(visibleData.length / pixelsAvailable);
+                displayData = [];
+                for (let i = 0; i < visibleData.length; i += downsampleRatio) {
+                    const chunk = visibleData.slice(i, i + downsampleRatio);
+                    // Store both min and max to preserve edges
+                    let minVal = 0xFF, maxVal = 0;
+                    for (let j = 0; j < chunk.length; j++) {
+                        minVal = Math.min(minVal, chunk[j]);
+                        maxVal = Math.max(maxVal, chunk[j]);
+                    }
+                    displayData.push(maxVal); // Use max value for now
+                }
+            }
+
+            // Draw 8 channels (bit 0 to bit 7)
+            const colors = [
+                '#ef4444', '#f97316', '#f59e0b', '#eab308',
+                '#84cc16', '#22c55e', '#10b981', '#14b8a6'
+            ];
+
+            const channelHeight = canvas.height / 8;
+
+            for (let channel = 0; channel < 8; channel++) {
+                ctx.strokeStyle = colors[channel];
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+
+                const baseY = channelHeight * channel + channelHeight / 2;
+                const amplitude = channelHeight * 0.35;
+
+                let prevBit = null;
+
+                for (let x = 0; x < canvas.width; x++) {
+                    const sampleIdx = Math.floor(x * displayData.length / canvas.width);
+                    if (sampleIdx >= displayData.length) break;
+
+                    const byte = displayData[sampleIdx];
+                    const bitValue = (byte >> channel) & 1;
+                    const y = baseY - (bitValue ? amplitude : -amplitude);
+
+                    if (x === 0) {
+                        ctx.moveTo(x, y);
+                        prevBit = bitValue;
+                    } else {
+                        // Draw vertical line on transitions for digital signal look
+                        const prevSampleIdx = Math.floor((x - 1) * displayData.length / canvas.width);
+                        const prevByte = displayData[prevSampleIdx];
+                        const prevBitValue = (prevByte >> channel) & 1;
+
+                        if (prevBitValue !== bitValue) {
+                            ctx.lineTo(x, baseY - (prevBitValue ? amplitude : -amplitude));
+                        }
+                        ctx.lineTo(x, y);
+                    }
+                }
+                ctx.stroke();
+
+                // Draw channel label with background
+                ctx.fillStyle = 'rgba(15, 23, 42, 0.8)';
+                ctx.fillRect(3, baseY - amplitude - 18, 35, 16);
+                ctx.fillStyle = colors[channel];
+                ctx.font = 'bold 12px Rajdhani';
+                ctx.fillText(`CH${channel}`, 5, baseY - amplitude - 5);
+            }
+
+            // Draw time scale markers
+            ctx.fillStyle = '#94a3b8';
+            ctx.font = 'bold 11px Rajdhani';
+            const numMarkers = 10;
+            for (let i = 0; i <= numMarkers; i++) {
+                const x = (i / numMarkers) * canvas.width;
+                const sampleNum = Math.floor(viewStartSample + (i / numMarkers) * samplesPerScreen);
+                ctx.fillText(sampleNum.toString(), x + 2, canvas.height - 5);
+            }
+        }
+
+        function addResponse(message, response, success = true, errorDetails = null, timing = null) {
+            const responseBox = document.getElementById('responseBox');
+            const time = new Date().toLocaleTimeString();
+
+            const responseItem = document.createElement('div');
+            responseItem.className = `response-item ${success ? 'success' : 'error'}`;
+
+            let errorInfo = '';
+            if (errorDetails && errorDetails.error_code !== undefined) {
+                errorInfo = `
+                    <div class="response-data" style="color: #ef4444; font-weight: 600;">
+                         Error Code: ${errorDetails.error_code}
+                        <br> ${errorDetails.error_message || 'Unknown error'}
+                    </div>
+                `;
+            }
+
+            let timingInfo = '';
+            if (timing) {
+                timingInfo = `
+                    <div class="response-data" style="color: #38bdf8; font-weight: 600; font-size: 12px;">
+                         Lock: ${timing.lock_wait_ms}ms | Flush: ${timing.flush_time_ms}ms | Write: ${timing.write_time_ms}ms | Response: ${timing.response_wait_ms}ms | Total: ${timing.total_time_ms}ms
+                    </div>
+                `;
+            }
+
+            responseItem.innerHTML = `
+                <div class="response-time"> ${time}</div>
+                <div class="response-message">${message}</div>
+                ${response ? `<div class="response-data"> ${response}</div>` : ''}
+                ${timingInfo}
+                ${errorInfo}
+            `;
+
+            // Clear "Waiting for commands..." message
+            if (responseBox.children.length === 1 && responseBox.textContent.includes('Awaiting commands')) {
+                responseBox.innerHTML = '';
+            }
+
+            responseBox.insertBefore(responseItem, responseBox.firstChild);
+
+            // Limit to 50 log entries to prevent performance degradation
+            while (responseBox.children.length > 50) {
+                responseBox.removeChild(responseBox.lastChild);
+            }
+        }
+        function shouldRunPSUTelemetry() {
+            const active = document.querySelector('.tab-panel.active');
+            return active && active.id === 'panel-psu';
+        }
+        async function connectDevice() {
+            try {
+                const portSelect = document.getElementById('portSelect');
+                const selectedPort = portSelect.value;
+
+                if (!selectedPort) {
+                    addResponse(' Please select a port first', null, false);
+                    return;
+                }
+
+                const response = await fetch('/api/connect', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ port: selectedPort })
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    updateStatus(true);
+                    addResponse(' ' + data.message, null, true);
+                    // Start polling for PSU status once connected
+                    startPsuPolling();
+                } else {
+                    updateStatus(false);
+                    addResponse(' ' + data.message, null, false);
+                    // Stop polling on failure
+                    stopPsuPolling();
+                }
+            } catch (error) {
+                addResponse(' Connection error', error.message, false);
+                stopPsuPolling();
+            }
+        }
+
+        function resetWaveformDefaults() {
+            document.getElementById('wfAmplitude').value = 1.0;
+            document.getElementById('wfFrequency').value = 1000;
+            document.getElementById('wfOffset').value = 0.0;
+            document.getElementById('wfPhase').value = 0.0;
+            document.getElementById('wfDutyCycle').value = 10.0;
+            document.getElementById('wfUpwards').value = 'true';
+            addResponse(' Waveform parameters reset to defaults', null, true);
+        }
+
+        function updateWaveformInputVisibility(type) {
+            const dutyCycleGroup = document.getElementById('dutyCycleGroup');
+            const rampDirectionGroup = document.getElementById('rampDirectionGroup');
+
+            // Hide all conditional fields first
+            dutyCycleGroup.style.display = 'none';
+            rampDirectionGroup.style.display = 'none';
+
+            // Show type-specific fields
+            if (type === 'pulse') {
+                dutyCycleGroup.style.display = 'flex';
+            } else if (type === 'ramp') {
+                rampDirectionGroup.style.display = 'flex';
+            }
+
+            // Highlight active button
+            ['sine', 'square', 'triangle', 'ramp', 'pulse'].forEach(waveType => {
+                const btn = document.getElementById(`btn-${waveType}`);
+                if (btn) {
+                    if (waveType === type) {
+                        btn.style.boxShadow = '0 0 20px rgba(251, 191, 36, 0.6)';
+                        btn.style.borderWidth = '2px';
+                    } else {
+                        btn.style.boxShadow = '';
+                        btn.style.borderWidth = '1px';
+                    }
+                }
+            });
+        }
+
+        async function sendWaveform(type) {
+            try {
+                // Update UI to show type-specific fields
+                updateWaveformInputVisibility(type);
+
+                // Gather parameters from input fields
+                let amplitude = parseFloat(0);
+                let frequency = parseFloat(0);
+                let offset = parseFloat(0);
+                let phase = parseFloat(0);
+                let duty_cycle = parseFloat(0);
+                let upwards = parseFloat(0);
+  
+                if(type !== 'off'){
+                    amplitude = parseFloat(document.getElementById('wfAmplitude').value);
+                    frequency = parseFloat(document.getElementById('wfFrequency').value);
+                    offset = parseFloat(document.getElementById('wfOffset').value);
+                    phase = parseFloat(document.getElementById('wfPhase').value);
+                    duty_cycle = parseFloat(document.getElementById('wfDutyCycle').value);
+                    upwards = document.getElementById('wfUpwards').value === 'true';
+                }
+                // Validate parameters
+                if (isNaN(amplitude) || isNaN(frequency) || isNaN(offset) || isNaN(phase)) {
+                    addResponse(' Invalid waveform parameters. Please check your inputs.', null, false);
+                    return;
+                }
+
+                // Build request body
+                const requestBody = {
+                    amplitude: amplitude,
+                    frequency: frequency,
+                    offset: offset,
+                    phase: phase,
+                    duty_cycle: duty_cycle,
+                    upwards: upwards
+                };
+                let lastType = type;
+                if(type === 'off'){
+                    type = 'square';
+                }
+
+                const response = await fetch(`/api/waveform/${type}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+                const data = await response.json();
+                const shapeLabel = capitalizeWord(type);
+                const timeLabel = `Updated ${formatTimeStamp()}`;
+
+                if (data.success) {
+                    if(lastType === 'off'){
+                        setStatusValue('waveformTypeStatus', 'Idle', 'status-warn');
+                        
+                        setStatusValue('waveformAmplitudeStatus', '—', null);
+                        setStatusValue('waveformFrequencyStatus', '—', null);
+                        setStatusValue('waveformUpdateStatus', timeLabel, 'status-good');
+                    } else {
+                        setStatusValue('waveformTypeStatus', shapeLabel, 'status-good');
+                        setStatusValue('waveformAmplitudeStatus', formatVoltage(amplitude), 'status-good');
+                        setStatusValue('waveformFrequencyStatus', formatFrequency(frequency), 'status-good');
+                        setStatusValue('waveformUpdateStatus', timeLabel, 'status-good');
+                    }
+
+                    // Build detailed parameter string for log
+                    let paramStr = `Amp: ${amplitude}V, Freq: ${formatFrequency(frequency)}, Offset: ${offset}V, Phase: ${phase}rad`;
+                    if (type === 'pulse') {
+                        paramStr += `, Duty: ${duty_cycle}%`;
+                    } else if (type === 'ramp') {
+                        paramStr += `, Dir: ${upwards ? 'Up' : 'Down'}`;
+                    }
+                    if(lastType === 'off'){
+                        addResponse(
+                            ` Waveform generator turned off`,
+                            paramStr,
+                            true,
+                            data
+                        );
+                    } else {
+                        addResponse(
+                            ` ${data.message}`,
+                            paramStr,
+                            true,
+                            data
+                        );
+                    }
+                } else {
+                    setStatusValue('waveformUpdateStatus', 'Command failed', 'status-bad');
+                    addResponse(' ' + data.message, data.response || null, false, data);
+                }
+            } catch (error) {
+                setStatusValue('waveformUpdateStatus', 'Error sending waveform', 'status-bad');
+                addResponse(' Error sending waveform', error.message, false);
+            }
+        }
+
+        function setPDProfile(profileID) {
+
+            ppsConfig = document.getElementById("PPSConfig")
+            if (profileID != 5) {
+                ppsConfig.style.display = 'none';
+            } else {
+                ppsConfig.style.display = 'block';
+            }
+
+
+            addResponse(` PD profile selected: ${profileID}`, null, true);
+        }
+
+
+        function setVoltage(voltage) {
+            document.getElementById('Voltage').value = voltage.toFixed(1);
+            setStatusValue('psuVoltageStatus', formatVoltage(voltage), 'status-good');
+            addResponse(` Voltage preset selected: ${voltage}V`, null, true);
+        }
+
+      
+        //globally store all the psu capabilities for accurate system logs
+        let psuCapabilities;
+        async function queryPSUCapabilities() {
+            console.log("inside query psu capabiulities")
+            try {
+                const response = await fetch('/api/psu/capabilities', {
+                    method: 'POST'
+                });
+                const data = await response.json();
+                console.log(data);
+
+
+                if (data.success && data.capabilities) {
+                    // Display capabilities
+                    console.log(data.capabilities);
+                    psuCapabilities = data.capabilities;
+                    displayPSUCapabilities(data.capabilities);
+                    
+                    //console.log("L2590")
+                    addResponse(
+                        ` ${data.message}`,
+                        `Profiles: ${data.capabilities.map(c => `${c.voltage_max}V@${c.current_max}A (${c.type})`).join(', ')}`,
+                        true
+                    );
+
+                    addResponse(
+                        ` ${data.message}`,
+                        `Profiles: ${data.capabilities.map(c => `${c.voltage_max}V@${c.current_max}A (${c.type})`).join(', ')}`,
+                        true
+                    );
+                } else {
+                    addResponse(' ' + data.message, null, false, data);
+                }
+            } catch (error) {
+                addResponse(' Error querying capabilities', error.message, false);
+            }
+        }
+
+        function displayPSUCapabilities(capabilities) {
+            const panel = document.getElementById('psuCapabilitiesPanel');
+            const table = document.getElementById('psuCapabilitiesTable');
+
+            // Clear existing content
+            table.innerHTML = '';
+
+            // Create profile items
+            console.log("capabilities = ", capabilities)
+            capabilities.forEach((cap, index) => {
+                const item = document.createElement('div');
+                item.className = `psu-profile-item ${cap.type.toLowerCase()}`;
+                item.addEventListener("click", function () {
+                    // Remove active from all other profile items
+                    document.querySelectorAll('.psu-profile-item[active]')
+                        .forEach(el => el.removeAttribute('active'));
+
+                    // Add active to this one
+                    item.setAttribute("active", "");
+                    selectedPDSlot = index;
+                    setPDProfile(selectedPDSlot)
+                    console.log(selectedPDSlot);
+                });
+
+                const typeLabel = cap.type === 'Fixed' ? '' : (cap.type === 'PPS' ? '' : '');
+
+                const voltageDisplay = cap.type !== 'Fixed' && cap.voltage_min
+                    ? `${cap.voltage_min}V - ${cap.voltage_max}V`
+                    : `${cap.voltage_max}V`;
+
+                item.innerHTML = `
+                    <div>
+                        <strong>${typeLabel} ${cap.type} Profile (Slot ${cap.slot})</strong>
+                        <div class="psu-profile-specs">
+                            ${voltageDisplay} @ ${cap.current_max}A (${cap.power_max}W max)
+                        </div>
+                    </div>
+                    <button class="btn-compact psu-btn">
+                        Use slot ${cap.slot}
+                    </button>
+                `;
+
+                table.appendChild(item);
+            });
+
+            // Show the panel
+            panel.style.display = 'block';
+        }
+
+        function updatePSUButtons() {
+            const b3 = document.getElementById("btn3V");
+            const b5 = document.getElementById("btn5V");
+
+            // Update 3.3V button style
+            if (fixed3VEn) {
+                b3.classList.add("psu-btn-on");
+                b3.classList.remove("psu-btn-off");
+            } else {
+                b3.classList.add("psu-btn-off");
+                b3.classList.remove("psu-btn-on");
+            }
+
+            // Update 5V button style
+            if (fixed5VEn) {
+                b5.classList.add("psu-btn-on");
+                b5.classList.remove("psu-btn-off");
+            } else {
+                b5.classList.add("psu-btn-off");
+                b5.classList.remove("psu-btn-on");
+            }
+        }
+
+        function toggle3V() {
+            // Toggle 3.3V
+            fixed3VEn = !fixed3VEn;
+            updatePSUButtons();
+        }
+
+        function toggle5V() {
+            // Toggle 5V
+            fixed5VEn = !fixed5VEn;
+            updatePSUButtons();
+        }
+
+
+        async function sendPSUOnOff(type) {
+            try {
+                const response = await fetch(`/api/psu/${type}`, {
+                    method: 'POST'
+                });
+                const data = await response.json();
+                const label = type === 'on' ? 'Output On' : 'Output Off';
+                const successState = type === 'on' ? 'status-good' : 'status-warn';
+
+                if (data.success) {
+                    setStatusValue('psuOutputStatus', label, successState);
+                } else {
+                    setStatusValue('psuOutputStatus', 'Error', 'status-bad');
+                }
+
+                addResponse(
+                    data.success ? ' ' + data.message : ' ' + data.message,
+                    data.response || null,
+                    data.success,
+                    data
+                );
+            } catch (error) {
+                setStatusValue('psuOutputStatus', 'Error', 'status-bad');
+                addResponse(' Error sending psu command', error.message, false);
+            }
+        }
+
+        async function laStart() {
+            try {
+                const response = await fetch('/api/la/start', {
+                    method: 'POST'
+                });
+                const data = await response.json();
+                if (data.success) {
+                    setStatusValue('laCaptureStatus', 'Capturing', 'status-good');
+                } else {
+                    setStatusValue('laCaptureStatus', 'Start failed', 'status-bad');
+                }
+
+                addResponse(
+                    data.success ? ' ' + data.message : ' ' + data.message,
+                    data.response || null,
+                    data.success,
+                    data
+                );
+            } catch (error) {
+                setStatusValue('laCaptureStatus', 'Start error', 'status-bad');
+                addResponse(' Error starting logic analyzer', error.message, false);
+            }
+        }
+
+        async function laStop() {
+            try {
+                const response = await fetch('/api/la/stop', {
+                    method: 'POST'
+                });
+                const data = await response.json();
+                if (data.success) {
+                    setStatusValue('laCaptureStatus', 'Idle', 'status-warn');
+                } else {
+                    setStatusValue('laCaptureStatus', 'Stop failed', 'status-bad');
+                }
+
+                addResponse(
+                    data.success ? ' ' + data.message : ' ' + data.message,
+                    data.response || null,
+                    data.success,
+                    data
+                );
+            } catch (error) {
+                setStatusValue('laCaptureStatus', 'Stop error', 'status-bad');
+                addResponse(' Error stopping LA', error.message, false);
+            }
+        }
+
+        async function laGetChunk() {
+            const numChunks = document.getElementById('numChunks').value;
+
+            try {
+                const response = await fetch('/api/la/get_chunk', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ num_chunks: numChunks })
+                });
+                const data = await response.json();
+
+                if (data.success && data.data_bytes) {
+                    // Draw the waveform visualization with ALL data
+                    drawWaveform(data.data_bytes);
+                    setStatusValue('laCaptureStatus', `Data ${data.total_bytes || data.data_bytes.length} B`, 'status-good');
+
+                    // Format a summary for the log (don't display all bytes in text)
+                    let sampleDisplay = `Total bytes: ${data.total_bytes}\n\n`;
+
+                    // Only show first 256 bytes in the hex dump to avoid performance issues
+                    const bytesToShow = Math.min(256, data.data_bytes.length);
+                    sampleDisplay += `First ${bytesToShow} bytes (hex dump):\n`;
+
+                    // Display as hex dump (16 bytes per line)
+                    for (let i = 0; i < bytesToShow; i += 16) {
+                        const offset = i.toString(16).padStart(4, '0');
+                        const hexBytes = data.data_bytes.slice(i, i + 16)
+                            .map(b => b.toString(16).padStart(2, '0'))
+                            .join(' ');
+                        const asciiBytes = data.data_bytes.slice(i, i + 16)
+                            .map(b => (b >= 32 && b <= 126) ? String.fromCharCode(b) : '.')
+                            .join('');
+
+                        sampleDisplay += `${offset}: ${hexBytes.padEnd(48, ' ')} | ${asciiBytes}\n`;
+                    }
+
+                    if (data.data_bytes.length > bytesToShow) {
+                        sampleDisplay += `\n... (${data.data_bytes.length - bytesToShow} more bytes)\n`;
+                        sampleDisplay += `\n All ${data.data_bytes.length} samples are shown in the waveform above.\n`;
+                        sampleDisplay += `Use zoom and pan controls to explore the data.`;
+                    }
+
+                    addResponse(
+                        ' ' + data.message,
+                        sampleDisplay,
+                        true,
+                        data
+                    );
+                } else {
+                    addResponse(
+                        data.success ? ' ' + data.message : ' ' + data.message,
+                        data.response || null,
+                        data.success,
+                        data
+                    );
+                }
+            } catch (error) {
+                setStatusValue('laCaptureStatus', 'Data error', 'status-bad');
+                addResponse(' Error getting chunk', error.message, false);
+            }
+        }
+
+        async function configurePSU() {
+            // selectedPDSlot
+            if (selectedPDSlot < 0) {
+                addResponse(` Please select a PD Profile first`);
+                return;
+            }
+            //console.log("pd slot = ")
+            //console.log( selectedPDSlot)
+            let voltage = document.getElementById('Voltage').value;
+            //console.log("voltage =")
+            //console.log(voltage)
+
+            if(selectedPDSlot != 5){
+                voltage = psuCapabilities[selectedPDSlot].voltage_max;
+            } 
+
+
+            try {
+                const response = await fetch('/api/psu/config', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ voltage: voltage, pdslot: selectedPDSlot, f3Ven: fixed3VEn, f5Ven: fixed5VEn })
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    setStatusValue('psuVoltageStatus', formatVoltage(voltage), 'status-good');
+                } else {
+                    setStatusValue('psuVoltageStatus', formatVoltage(voltage), 'status-bad');
+                }
+
+                addResponse(
+                    data.success ? ' ' + data.message : ' ' + data.message,
+                    data.response || null,
+                    data.success,
+                    data
+                );
+            } catch (error) {
+                setStatusValue('psuVoltageStatus', 'Error', 'status-bad');
+                addResponse(' Error configuring voltage', error.message, false);
+            }
+        }
+
+        async function configureLA() {
+            const frequency = document.getElementById('frequency').value;
+
+            try {
+                const response = await fetch('/api/la/config', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ frequency: frequency })
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    setStatusValue('laFrequencyStatus', formatFrequency(frequency), 'status-good');
+                } else {
+                    setStatusValue('laFrequencyStatus', 'Config error', 'status-bad');
+                }
+
+                addResponse(
+                    data.success ? ' ' + data.message : ' ' + data.message,
+                    data.response || null,
+                    data.success,
+                    data
+                );
+            } catch (error) {
+                setStatusValue('laFrequencyStatus', 'Config error', 'status-bad');
+                addResponse(' Error configuring LA', error.message, false);
+            }
+        }
+
+        async function pingDevice() {
+            try {
+                const response = await fetch('/api/ping', {
+                    method: 'POST'
+                });
+                const data = await response.json();
+
+                addResponse(
+                    data.success ? ' ' + data.message : ' ' + data.message,
+                    data.response || null,
+                    data.success,
+                    null,  // errorDetails
+                    data.timing || null  // timing data
+                );
+            } catch (error) {
+                addResponse(' Error pinging device', error.message, false);
+            }
+        }
+
+        async function testUsbSpeed() {
+            const testSize = parseInt(document.getElementById('testSizeSelect').value);
+            const throughputElement = document.getElementById('usbThroughput');
+            const durationElement = document.getElementById('usbDuration');
+
+            // Reset display
+            throughputElement.textContent = 'Testing...';
+            durationElement.textContent = 'Testing...';
+
+            try {
+                const response = await fetch('/api/usb/speed_test', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ test_size_kb: testSize })
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    // Update status tiles
+                    throughputElement.textContent = `${data.throughput_mbps} MB/s`;
+                    durationElement.textContent = `${data.duration_ms} ms`;
+
+                    // Add response to log
+                    const details = `Transferred ${data.total_bytes.toLocaleString()} bytes (${data.test_size_kb}KB)\n` +
+                        `Throughput: ${data.throughput_mbps} MB/s\n` +
+                        `Duration: ${data.duration_ms} ms`;
+
+                    addResponse(
+                        ' USB speed test complete',
+                        details,
+                        true,
+                        null,
+                        data.timing || null
+                    );
+                } else {
+                    throughputElement.textContent = 'Error';
+                    durationElement.textContent = 'Error';
+                    addResponse(' ' + data.message, null, false);
+                }
+            } catch (error) {
+                throughputElement.textContent = 'Error';
+                durationElement.textContent = 'Error';
+                addResponse(' Error testing USB speed', error.message, false);
+            }
+        }
+
+        // --- PSU Status Polling ---
+        let psuStatusInterval;
+
+        function queryPSUStatus() {
+            if (!isConnected) return;
+
+            fetch('/api/psu/status', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && data.status) {
+                        updatePSUTelemetry(data.status);
+                    } else {
+                        // Don't log errors on periodic polls to avoid spam
+                        // logResponse(`PSU Status Poll Failed: ${data.message || 'No status data'}`, 'error');
+                        updatePSUTelemetry(null); // Clear telemetry on error
+                    }
+                })
+                .catch(error => {
+                    // logResponse(`PSU Status Poll Error: ${error}`, 'error');
+                    updatePSUTelemetry(null); // Clear telemetry on error
+                });
+        }
+
+
+        let psuLifeInterval;
+        function queryPSULife() {
+            if (!isConnected) return;
+
+            fetch('/api/psu/alive', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            })
+                .then(response => response.json())
+                .then(data => {
+
+                    if (data.success) {
+                        if (isUSBCConnected != data.status) {
+                            const psuIndicator = document.getElementById('psuIndicator');
+                            psuIndicator.classList.toggle('unstable', data.status == false);
+                            if (data.status == false) {
+                                console.log("went into if in psu/alive")
+                                //collapseSection(document.getElementById("psusec"))
+                                selectedPDSlot = -1;
+                            } else {
+                                console.log("went into else in psu/alive")
+
+                                //expandSection(document.getElementById("psusec"))
+                                queryPSUCapabilities()
+                            }
+                        }
+
+                        isUSBCConnected = (data.status == true)
+                    }
+
+                    //On change
+                    if (data.success != isPDWFConnected) {
+                        if (data.success) {
+                            console.log(`PSU Alive: USB connection is ${data.status}`)
+                        } else {
+                            console.log("PSU DEAD")
+                            //collapseSection(document.getElementById("psusec"))
+                            //collapseSection(document.getElementById("wavsec"))
+                        }
+
+                        const psuIndicator = document.getElementById('psuIndicator');
+                        psuIndicator.classList.toggle('connected', data.success);
+                        psuIndicator.setAttribute('aria-label', data.success ? 'Device connected' : 'Device disconnected');
+                        const wfIndicator = document.getElementById('wfIndicator');
+                        wfIndicator.classList.toggle('connected', data.success);
+                        wfIndicator.setAttribute('aria-label', data.success ? 'Device connected' : 'Device disconnected');
+
+                    }
+
+                    isPDWFConnected = data.success
+                })
+                .catch(error => {
+                });
+        }
+
+
+        function updatePSUTelemetry(status) {
+            const voltageEl = document.getElementById('psu-voltage-actual');
+            const currentEl = document.getElementById('psu-current-actual');
+            const currentLim = document.getElementById('psu-current-limit');
+            const tempEl = document.getElementById('psu-temp');
+            const status5VEl = document.getElementById('psu-5v-status');
+            const status3V3El = document.getElementById('psu-3v3-status');
+            const voltageReqEl = document.getElementById('psu-voltage-req');
+
+            if (status) {
+                voltageEl.textContent = status.voltage_actual.toFixed(2);
+                currentEl.textContent = status.current_actual.toFixed(3);
+                currentLim.textContent = status.req_current_lim.toFixed(3);
+                tempEl.textContent = status.temp_c.toFixed(1);
+                voltageReqEl.textContent = status.req_voltage.toFixed(2);
+
+                status5VEl.textContent = status.f5v_enabled ? 'ON' : 'OFF';
+                status5VEl.className = `status-value ${status.f5v_enabled ? 'status-good' : 'status-bad'}`;
+
+                status3V3El.textContent = status.f3v_enabled ? 'ON' : 'OFF';
+                status3V3El.className = `status-value ${status.f3v_enabled ? 'status-good' : 'status-bad'}`;
+
+                // Update voltage status color based on how close it is to requested
+                const diff = Math.abs(status.voltage_actual - status.req_voltage);
+                if (status.req_voltage > 0) {
+                    if (diff < 0.1) {
+                        voltageEl.classList.add('status-good');
+                        voltageEl.classList.remove('status-warn', 'status-bad');
+                    } else if (diff < 0.5) {
+                        voltageEl.classList.add('status-warn');
+                        voltageEl.classList.remove('status-good', 'status-bad');
+                    } else {
+                        voltageEl.classList.add('status-bad');
+                        voltageEl.classList.remove('status-good', 'status-warn');
+                    }
+                } else {
+                    voltageEl.classList.remove('status-good', 'status-warn', 'status-bad');
+                }
+
+            } else {
+                // Reset to default on error or disconnect
+                [voltageEl, currentEl, tempEl, voltageReqEl].forEach(el => el.textContent = '--');
+                [status5VEl, status3V3El].forEach(el => {
+                    el.textContent = 'N/A';
+                    el.className = 'status-value';
+                });
+                voltageEl.classList.remove('status-good', 'status-warn', 'status-bad');
+            }
+        }
+
+        function startPsuPolling() {
+            if (psuStatusInterval) clearInterval(psuStatusInterval);
+            if (psuLifeInterval) clearInterval(psuLifeInterval);
+            // Poll every 2 seconds
+            psuStatusInterval = setInterval(queryPSUStatus, 5000);
+            setTimeout(() => { //offset life query by 500ms
+                psuLifeInterval = setInterval(queryPSULife, 5000);
+            }, 5000);
+        }
+
+        function stopPsuPolling() {
+            if (psuStatusInterval) clearInterval(psuStatusInterval);
+            if (psuLifeInterval) clearInterval(psuLifeInterval);
+            psuStatusInterval = null;
+            psuLifeInterval = null;
+            updatePSUTelemetry(null); // Clear data on disconnect
+        }
+
+        // --- Document Ready ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Start PSU status polling when connected
+            const originalConnectDevice = connectDevice.bind(this);
+            connectDevice = async function () {
+                await originalConnectDevice();
+                if (isConnected) {
+                    startPsuPolling();
+                } else {
+                    stopPsuPolling();
+                }
+            };
+
+            // Stop polling on unload
+            window.addEventListener('beforeunload', () => {
+                stopPsuPolling();
+            });
+        });
+        document.addEventListener('keydown', function (event) {
+            // Avoid triggering hotkeys while typing in text/number inputs
+            if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
+
+            let targetPanel = null;
+
+            switch (event.key) {
+                case '1':
+                    targetPanel = 'panel-connection';
+                    break;
+                case '2':
+                    targetPanel = 'panel-psu';
+                    break;
+                case '3':
+                    targetPanel = 'panel-wf';
+                    break;
+                case '4':
+                    targetPanel = 'panel-la';
+                    break;
+                case '5':
+                    targetPanel = 'panel-scope';
+                    break;
+                default:
+                    return; // ignore all other keys
+            }
+
+            const btn = document.querySelector(`.tab-btn[data-target="${targetPanel}"]`);
+            if (btn) {
+                btn.click();           // triggers your existing handler
+                event.preventDefault(); // avoid scrolling/etc
+            }
+        });
+    </script>
+</body>
+
+</html>

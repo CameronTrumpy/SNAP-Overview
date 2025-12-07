@@ -1,0 +1,52 @@
+name: Build all STM32CubeIDE projects
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    outputs:
+      projects: ${{ steps.discover.outputs.projects }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - id: discover
+        run: |
+          echo "Discovering STM32CubeIDE projects..."
+          projects=$(find . -name ".project" -exec dirname {} \;)
+          echo "Found projects:"
+          echo "$projects"
+
+          # Convert list of project paths to JSON array
+          json=$(printf '%s\n' $projects | jq -R . | jq -s -c .)
+          echo "projects=$json" >> "$GITHUB_OUTPUT"
+
+  build:
+    needs: discover
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        project: ${{ fromJson(needs.discover.outputs.projects) }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Set project target
+        id: settarget
+        run: |
+          echo "PROJECT_TARGET=$(basename ${{ matrix.project }})" >> $GITHUB_ENV
+          echo "Project target: $PROJECT_TARGET"
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build STM32CubeIDE project ${{ matrix.project }}
+        uses: xanderhendriks/action-build-stm32cubeide@v16.1
+        with:
+          project-path: ${{ matrix.project }}
+          project-target: ${{ env.PROJECT_TARGET }}

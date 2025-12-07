@@ -19,3 +19,5 @@ SNAP-Overview is our central repository storing all of the relevant information 
     - The frontend and backend for our web-based user interface
 - [SigrokPatch](./SigrokPatch)
     - Our modified version of [Sigrok](http://sigrok.org) with support for SNAP
+
+

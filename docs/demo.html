@@ -1346,8 +1346,6 @@
                                 <div class="input-group">
                                     <button id="continuousButton" class="button-grid os-btn center-buttons"
                                         onclick="toggleContinuous()">Start Continuous</button>
-                                    <!--<button id="scopeStartBtn" class="secondary">Start</button>
-                                    <button id="scopeStopBtn" class="secondary">Stop</button>-->
                                     <button id="scopeSingleBtn" class="button-grid os-btn center-buttons">Single
                                         Capture</button>
                                 </div>
@@ -2724,12 +2722,6 @@
 
             if (document.getElementById('scopeStartContinuosBtn'))
                 document.getElementById('scopeStartContinuosBtn').onclick = () => toggleContinuous();
-
-            if (document.getElementById('scopeStartBtn'))
-                document.getElementById('scopeStartBtn').onclick = osStart;
-
-            if (document.getElementById('scopeStopBtn'))
-                document.getElementById('scopeStopBtn').onclick = osStop;
 
             if (document.getElementById('scopeSingleBtn'))
                 document.getElementById('scopeSingleBtn').onclick = () => singleShot(true);

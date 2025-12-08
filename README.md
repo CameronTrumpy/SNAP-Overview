@@ -19,5 +19,11 @@ SNAP-Overview is our central repository storing all of the relevant information 
     - The frontend and backend for our web-based user interface
 - [SigrokPatch](./SigrokPatch)
     - Our modified version of [Sigrok](http://sigrok.org) with support for SNAP
-
+## Contributors
+- [Claire Garbowski](https://www.linkedin.com/in/claire-garbowski/)
+- [Ethan McKean](https://www.linkedin.com/in/ethanmckean/)
+- [Andre Quimper Osores](https://www.linkedin.com/in/andre-q-395964254/)
+- [Jack Smith](http://www.linkedin.com/in/jack-smith-561326330)
+- [Cameron Trumpy](https://www.linkedin.com/in/cameron-trumpy/)
+- [Benjamin Wolin](https://www.linkedin.com/in/benjamin-wolin-8812aa1ab/)
 

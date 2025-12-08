@@ -1,0 +1,3 @@
+[submodule "Firmware/main_board/main_board/tinyusb"]
+	path = Firmware/main_board/main_board/tinyusb
+	url = https://github.com/hathach/tinyusb.git
